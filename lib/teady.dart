@@ -1,0 +1,162 @@
+// lib/teddy_bear.dart
+
+import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
+import 'package:flame/sprite.dart';
+import 'super_dash_game.dart';
+import 'obstacle.dart';
+import 'dart:math';
+
+class TeddyBear extends SpriteAnimationComponent
+    with HasGameRef<SuperDashGame>, CollisionCallbacks {
+  late SpriteAnimation walkAnimation;
+  late SpriteAnimation jumpAnimation;
+  late SpriteAnimation collisionAnimation;
+  late SpriteAnimationTicker collisionTicker;
+  bool isJumping = false;
+  bool isColliding = false;
+  // Adjust based on your ground level
+
+  final double initialVelocityY = 800; // Vertical speed for higher jump
+  final double gravity = 200; // Gravity to control the descent
+  double time = 0; // Track jump time
+  late double velocityY; // Vertical velocity
+
+  TeddyBear()
+      : super(
+          size: Vector2(100, 100), // Adjust the size if necessary
+          anchor: Anchor.bottomLeft,
+        );
+
+  @override
+  Future<void> onLoad() async {
+    // Set initial position on the left side of the screen
+    position = Vector2(75, gameRef.groundY); // Starting on the ground
+
+    // Load walk animation frames
+    final walkImages = await gameRef.images.loadAll([
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_000.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_001.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_002.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_003.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_004.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_005.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_006.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_007.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_008.png',
+      'NUDE/03-Walk/01-Walk/FA_TEDDY_Walk_009.png',
+    ]);
+    walkAnimation = SpriteAnimation.spriteList(
+      walkImages.map((image) => Sprite(image)).toList(),
+      stepTime: 0.1,
+    );
+
+    // Load jump animation frames
+    final jumpImages = await gameRef.images.loadAll([
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_000.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_001.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_002.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_003.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_004.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_005.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_006.png',
+      'NUDE/06-Jump/03-Jump_Throw/FA_TEDDY_Jump_Throw_007.png',
+    ]);
+    jumpAnimation = SpriteAnimation.spriteList(
+      jumpImages.map((image) => Sprite(image)).toList(),
+      stepTime: 0.1,
+    );
+
+    // Load collision animation frames
+    final collisionImages = await gameRef.images.loadAll([
+      'NUDE/08-Dead/FA_TEDDY_Dead_000.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_001.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_002.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_003.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_004.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_005.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_006.png',
+    ]);
+    collisionAnimation = SpriteAnimation.spriteList(
+      collisionImages.map((image) => Sprite(image)).toList(),
+      stepTime: 0.1,
+      loop: false, // Play once upon collision
+    );
+
+    // Initialize collision ticker to detect when collision animation finishes
+    collisionTicker = collisionAnimation.createTicker();
+
+    // Start with the walk animation
+    animation = walkAnimation;
+
+    // Flip the teddy bear to face right-to-left
+    scale = Vector2(-1, 1);
+
+    // Add a hitbox
+    add(RectangleHitbox.relative(Vector2(0.2, 0.2),
+        parentSize: size, isSolid: true));
+  }
+
+  // Method to trigger the jump with vertical motion only
+  void jump() {
+    if (!isJumping && !isColliding) {
+      // Prevent jumping while colliding
+      isJumping = true;
+      animation = jumpAnimation;
+      time = 0;
+
+      // Set initial vertical velocity
+      velocityY = initialVelocityY;
+    }
+  }
+
+  // Override update to simulate vertical jump motion and handle collision animation
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    if (isJumping) {
+      // Update time
+      time += dt;
+
+      // Update position for vertical motion
+      position.y -= (velocityY * dt - 0.5 * gravity * pow(time, 2));
+
+      // Check if teddy has landed back on the ground
+      if (position.y >= gameRef.groundY) {
+        position.y = gameRef.groundY; // Reset to ground level
+        animation = walkAnimation; // Switch back to walk animation
+        isJumping = false; // Reset jumping state
+      }
+    }
+
+    // Check if collision animation has completed
+    if (isColliding) {
+      collisionTicker.update(dt);
+      if (collisionTicker.done()) {
+        gameRef.overlays.add('GameOver'); // Show Game Over overlay
+        gameRef.pauseEngine(); // Pause the game
+      }
+    }
+  }
+
+  // Handle collision with obstacles
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+
+    if (other is Obstacle && !isColliding) {
+      // Trigger collision animation only if not already colliding
+      isColliding = true;
+      animation = collisionAnimation; // Set collision animation
+      collisionTicker.reset(); // Start the collision ticker
+    }
+  }
+
+  void reset() {
+    position = Vector2(75, gameRef.groundY); // Reset to starting position
+    isJumping = false;
+    isColliding = false;
+    animation = walkAnimation; // Reset to walk animation
+  }
+}
