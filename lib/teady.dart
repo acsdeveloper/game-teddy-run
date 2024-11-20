@@ -12,26 +12,27 @@ class TeddyBear extends SpriteAnimationComponent
   late SpriteAnimation walkAnimation;
   late SpriteAnimation jumpAnimation;
   late SpriteAnimation collisionAnimation;
+  late SpriteAnimation runningAnimation; // Add running animation
   late SpriteAnimationTicker collisionTicker;
   bool isJumping = false;
   bool isColliding = false;
-  // Adjust based on your ground level
+  bool isRunning = false; // Track running state
 
-  final double initialVelocityY = 800; // Vertical speed for higher jump
-  final double gravity = 200; // Gravity to control the descent
+  final double initialVelocityY = 1000; // Vertical speed for higher jump
+  final double gravity = 300; // Gravity to control the descent
   double time = 0; // Track jump time
   late double velocityY; // Vertical velocity
 
   TeddyBear()
       : super(
-          size: Vector2(100, 100), // Adjust the size if necessary
+          size: Vector2(70, 100), // Adjust the size if necessary
           anchor: Anchor.bottomLeft,
         );
 
   @override
   Future<void> onLoad() async {
     // Set initial position on the left side of the screen
-    position = Vector2(75, gameRef.groundY); // Starting on the ground
+    position = Vector2(100, gameRef.groundY); // Starting on the ground
 
     // Load walk animation frames
     final walkImages = await gameRef.images.loadAll([
@@ -64,7 +65,7 @@ class TeddyBear extends SpriteAnimationComponent
     ]);
     jumpAnimation = SpriteAnimation.spriteList(
       jumpImages.map((image) => Sprite(image)).toList(),
-      stepTime: 0.1,
+      stepTime: 0.2,
     );
 
     // Load collision animation frames
@@ -76,11 +77,30 @@ class TeddyBear extends SpriteAnimationComponent
       'NUDE/08-Dead/FA_TEDDY_Dead_004.png',
       'NUDE/08-Dead/FA_TEDDY_Dead_005.png',
       'NUDE/08-Dead/FA_TEDDY_Dead_006.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_007.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_008.png',
+      'NUDE/08-Dead/FA_TEDDY_Dead_009.png',
     ]);
     collisionAnimation = SpriteAnimation.spriteList(
       collisionImages.map((image) => Sprite(image)).toList(),
       stepTime: 0.1,
       loop: false, // Play once upon collision
+    );
+
+    // Load running animation frames
+    final runningImages = await gameRef.images.loadAll([
+      'NUDE/04-Run/FA_TEDDY_Run_000.png',
+      'NUDE/04-Run/FA_TEDDY_Run_001.png',
+      'NUDE/04-Run/FA_TEDDY_Run_002.png',
+      'NUDE/04-Run/FA_TEDDY_Run_003.png',
+      'NUDE/04-Run/FA_TEDDY_Run_004.png',
+      'NUDE/04-Run/FA_TEDDY_Run_005.png',
+      'NUDE/04-Run/FA_TEDDY_Run_006.png',
+      'NUDE/04-Run/FA_TEDDY_Run_007.png',
+    ]);
+    runningAnimation = SpriteAnimation.spriteList(
+      runningImages.map((image) => Sprite(image)).toList(),
+      stepTime: 0.07, // Faster animation for running
     );
 
     // Initialize collision ticker to detect when collision animation finishes
@@ -115,6 +135,18 @@ class TeddyBear extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
 
+    // Switch to running animation if score is above 1000
+    if (gameRef.score > 800 && !isJumping && !isColliding && !isRunning) {
+      animation = runningAnimation;
+      isRunning = true;
+    } else if (gameRef.score <= 800 &&
+        !isJumping &&
+        !isColliding &&
+        isRunning) {
+      animation = walkAnimation;
+      isRunning = false;
+    }
+
     if (isJumping) {
       // Update time
       time += dt;
@@ -125,7 +157,9 @@ class TeddyBear extends SpriteAnimationComponent
       // Check if teddy has landed back on the ground
       if (position.y >= gameRef.groundY) {
         position.y = gameRef.groundY; // Reset to ground level
-        animation = walkAnimation; // Switch back to walk animation
+        animation = isRunning
+            ? runningAnimation
+            : walkAnimation; // Switch back to appropriate animation
         isJumping = false; // Reset jumping state
       }
     }
@@ -157,6 +191,7 @@ class TeddyBear extends SpriteAnimationComponent
     position = Vector2(75, gameRef.groundY); // Reset to starting position
     isJumping = false;
     isColliding = false;
+    isRunning = false; // Reset running state
     animation = walkAnimation; // Reset to walk animation
   }
 }

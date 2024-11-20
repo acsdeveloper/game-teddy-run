@@ -2,7 +2,10 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:jumpapp/background.dart';
+import 'package:jumpapp/movingbackground.dart';
 import 'package:jumpapp/teady.dart';
 import 'obstacle.dart';
 
@@ -14,6 +17,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
   late TextComponent scoreText;
   late TextComponent highScoreText;
   int highScore = 0;
+  late MovingBackground movingBackground;
 
   double groundY = 0; // Will be set dynamically in onLoad
 
@@ -29,14 +33,23 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     highScore = await _loadHighScore();
     highScoreText = TextComponent(
       anchor: Anchor.topLeft,
-      text: 'High Score: $highScore',
-      position: Vector2(size.x - 140, 31),
-      textRenderer:
-          TextPaint(style: TextStyle(color: Colors.green, fontSize: 18)),
+      text: 'Best Score: $highScore',
+      position: Vector2(size.x - 150, 31),
+      textRenderer: TextPaint(
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontFamily: GoogleFonts.montserrat().fontFamily)),
     );
 
     // Initialize background, teddy bear, and score display
-    add(Background(imagePath: 'background.jpg'));
+    add(Background(
+      imagePath: 'background.png',
+    ));
+    // Add moving background layer
+    // movingBackground =
+    //     MovingBackground(imagePath: 'mountain/cloud.png', speed: 200);
+    // add(movingBackground);
 
     // Position the teddy bear at `groundY`
     teddyBear = TeddyBear()..position = Vector2(50, groundY);
@@ -45,8 +58,11 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     scoreText = TextComponent(
       text: 'Score: 0',
       position: Vector2(10, 30),
-      textRenderer:
-          TextPaint(style: TextStyle(color: Colors.black, fontSize: 18)),
+      textRenderer: TextPaint(
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontFamily: GoogleFonts.montserrat().fontFamily)),
     );
     add(scoreText);
     add(highScoreText);
@@ -54,6 +70,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     // Set up obstacle spawning every 2 seconds
     obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
     obstacleTimer.start();
+    teddyBear.isRunning = false;
   }
 
   @override
@@ -68,7 +85,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
       scoreText.text = 'Score: $score';
       if (score > highScore) {
         highScore = score;
-        highScoreText.text = "High Score :$score";
+        highScoreText.text = "Best Score: $score";
         await _saveHighScore(score);
       }
     }
@@ -93,7 +110,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     if (score > highScore) {
       highScore = score;
       await _saveHighScore(highScore);
-      highScoreText.text = 'High Score: $highScore';
+      highScoreText.text = 'Best Score: $highScore';
     }
 
     // Display a game-over message
@@ -101,8 +118,11 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
       text: 'Game Over!',
       position: Vector2(size.x / 2, size.y / 2),
       anchor: Anchor.center,
-      textRenderer:
-          TextPaint(style: TextStyle(color: Colors.red, fontSize: 30)),
+      textRenderer: TextPaint(
+          style: TextStyle(
+              color: Colors.red,
+              fontSize: 30,
+              fontFamily: GoogleFonts.montserrat().fontFamily)),
     );
     add(gameOverText);
   }
@@ -127,7 +147,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
 
     await _loadHighScore().then((xscore) async {
       if (xscore > highScore) {
-        highScoreText.text = "High Score :$xscore";
+        highScoreText.text = "Best Score: $xscore";
         await _saveHighScore(xscore);
       }
     });
@@ -149,5 +169,19 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     final box = Hive.box('gameBox');
     int highScore = box.get('highScore', defaultValue: 0);
     return highScore;
+  }
+
+  void startGame() {
+    // Set the game to started state and start the timer
+    // isGameStarted = true;
+    score = 0;
+    scoreText.text = 'Score: $score';
+    obstacleTimer.start();
+    isGameOver = false;
+    removeAll([
+      children
+          .whereType<TextComponent>()
+          .firstWhere((child) => child.text == 'Start')
+    ]);
   }
 }
