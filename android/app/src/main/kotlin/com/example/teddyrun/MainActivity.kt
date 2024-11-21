@@ -1,4 +1,4 @@
-package com.example.jumpapp
+package com.example.teddyrun
 
 import io.flutter.embedding.android.FlutterActivity
 
