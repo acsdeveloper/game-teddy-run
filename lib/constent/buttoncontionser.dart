@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jumpapp/constent/button.dart';
+import 'package:teddyRun/constent/button.dart';
 
 class AppConstants {
   static gradientContainer({

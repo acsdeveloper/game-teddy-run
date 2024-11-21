@@ -3,7 +3,7 @@
 import 'package:flame/timer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jumpapp/constent/stringconst.dart';
+
 import 'super_dash_game.dart';
 
 class StartGameOverlay extends StatelessWidget {

@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jumpapp/constent/stringconst.dart';
+import 'package:teddyRun/constent/stringconst.dart';
+
 import 'super_dash_game.dart';
 
 class GameOverOverlay extends StatelessWidget {

@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:jumpapp/constent/button.dart';
-import 'package:jumpapp/constent/buttoncontionser.dart';
-import 'package:jumpapp/game_over_widget.dart';
+import 'package:teddyRun/game_over_widget.dart';
 
+import 'constent/buttoncontionser.dart';
 import 'super_dash_game.dart';
 
 void main() async {

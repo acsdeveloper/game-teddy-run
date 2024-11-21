@@ -4,9 +4,10 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:jumpapp/background.dart';
-import 'package:jumpapp/movingbackground.dart';
-import 'package:jumpapp/teady.dart';
+import 'package:teddyRun/background.dart';
+import 'package:teddyRun/movingbackground.dart';
+import 'package:teddyRun/teady.dart';
+
 import 'obstacle.dart';
 
 class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
