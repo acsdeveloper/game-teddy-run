@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:jumpapp/constent/button.dart';
+import 'package:jumpapp/constent/buttoncontionser.dart';
 import 'package:jumpapp/game_over_widget.dart';
 
 import 'super_dash_game.dart';
@@ -38,42 +40,56 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.cyan],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: Colors.white,
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     colors:Colors.white,
+        //     begin: Alignment.topCenter,
+        //     end: Alignment.bottomCenter,
+        //   ),
+        // ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Teddy Run',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              Image.asset(
+                'assets/teddyicon.jpg',
+                width: 200, // Adjust dimensions as needed
               ),
               const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GameScreen()),
-                  );
-                },
-                child: Text('Start Game'),
+              AppConstants.gradientContainer(
+                  text: "Start",
+                  icon: Icons.play_arrow,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GameScreen()));
+                  }),
+              Container(
+                height: 30,
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  SystemNavigator.pop();
-                },
-                child: Text('Exit Game'),
-              ),
+              AppConstants.gradientContainer(
+                  text: "Exit",
+                  icon: Icons.exit_to_app,
+                  onTap: () {
+                    SystemNavigator.pop();
+                  })
+              // ButtonWidget(
+              //   text: "Start",
+              //   icon: Icons.play_arrow,
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => GameScreen()),
+              //     );
+              //   },
+              // ),
+              // SizedBox(height: 20),
+              // ButtonWidget(
+              //   text: "Exit Game",
+              //   onPressed: () {
+              //     SystemNavigator.pop();
+              //   },
+              // ),
             ],
           ),
         ),
