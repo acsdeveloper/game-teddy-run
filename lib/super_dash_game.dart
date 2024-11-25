@@ -45,7 +45,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
 
     // Initialize background, teddy bear, and score display
     add(Background(
-      imagePath: 'background.png',
+      imagePath: 'screen/background.png',
     ));
     // Add moving background layer
     // movingBackground =

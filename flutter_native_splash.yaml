@@ -22,7 +22,7 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/teddyicon.jpg
+  image: assets/image/screen/teddyicon.jpg
   android_gravity: fill  # Stretch the image to fill the entire screen on Android.
   ios_content_mode: scaleToFill  
   

@@ -52,7 +52,7 @@ class StartScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/teddyicon.jpg',
+                'assets/images/screen/teddyicon.jpg',
                 width: 200, // Adjust dimensions as needed
               ),
               const SizedBox(height: 50),
