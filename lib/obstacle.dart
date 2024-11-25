@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:teddyRun/constent/assets.dart';
+import 'package:teddyrun/constent/assets.dart';
 import 'dart:math';
 
-import 'package:teddyRun/super_dash_game.dart';
+import 'package:teddyrun/super_dash_game.dart';
 
 class Obstacle extends SpriteComponent
     with HasGameRef<SuperDashGame>, CollisionCallbacks {

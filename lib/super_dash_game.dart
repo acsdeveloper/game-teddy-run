@@ -4,9 +4,9 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:teddyRun/background.dart';
-import 'package:teddyRun/movingbackground.dart';
-import 'package:teddyRun/teady.dart';
+import 'package:teddyrun/background.dart';
+import 'package:teddyrun/movingbackground.dart';
+import 'package:teddyrun/teady.dart';
 
 import 'obstacle.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:teddyRun/super_dash_game.dart';
+import 'package:teddyrun/super_dash_game.dart';
 
 class Background extends SpriteComponent with HasGameRef<SuperDashGame> {
   final String imagePath;

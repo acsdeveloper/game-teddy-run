@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:teddyRun/game_over_widget.dart';
+import 'package:teddyrun/game_over_widget.dart';
 
 import 'constent/buttoncontionser.dart';
 import 'super_dash_game.dart';
