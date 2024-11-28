@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teddyRun/constent/Colors.dart';
 import 'package:teddyRun/constent/button.dart';
 
 class AppConstants {
@@ -17,8 +18,7 @@ class AppConstants {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: gradientColors ??
-                  [Colors.blue, Colors.purple], // Default colors
+              colors: gradientColors ?? scoreGradientColors, // Default colors
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

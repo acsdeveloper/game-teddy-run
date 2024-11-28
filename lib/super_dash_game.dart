@@ -21,6 +21,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
   late MovingBackground movingBackground;
 
   double groundY = 0; // Will be set dynamically in onLoad
+  bool ispaused = false;
 
   @override
   Future<void> onLoad() async {
@@ -34,7 +35,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     highScore = await _loadHighScore();
     highScoreText = TextComponent(
       anchor: Anchor.topLeft,
-      text: 'Best Score: $highScore',
+      text: 'Best Score : $highScore',
       position: Vector2(size.x - 150, 31),
       textRenderer: TextPaint(
           style: TextStyle(
@@ -44,16 +45,61 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     );
 
     // Initialize background, teddy bear, and score display
-    add(Background(
-      imagePath: 'screen/background.png',
-    ));
+    // add(Background(
+    //   imagePath: 'screen/background.jpg',
+    // ));
+    add(MovingBackground(
+        imagePath: "screen/backgroundfn.png",
+        invertimagePath: "screen/invertedbackground.png",
+        speed: 400)
+      ..size = Vector2(size.x * 5, size.y));
+    add(MovingBackground(
+        imagePath: "screen/cloud2.png",
+        invertimagePath: "screen/cloud.png",
+        speed: 20)
+      ..size = Vector2(size.x, size.y / 3));
+    // final button = ButtonComponent(
+    //   button: TextComponent(
+    //     size: Vector2(30, 30),
+    //     text: ispaused ? "||" : "|>",
+    //     textRenderer: TextPaint(
+    //         style: const TextStyle(color: Colors.white, fontSize: 18)),
+    //   ),
+    //   onPressed: () {
+    //     if (ispaused == false) {
+    //       pauseEngine();
+    //       ispaused = true;
+    //     } else {
+    //       resumeEngine();
+    //       ispaused = false;
+    //     }
+    //   },
+    //   position: Vector2(300, 10),
+    // );
+
+    // final button = HudButtonComponent(
+    //   button: TextComponent(
+
+    //     text: 'Back',
+    //     textRenderer: TextPaint(
+    //         style: const TextStyle(color: Colors.white, fontSize: 18)),
+    //   ),
+    //   onPressed: () {
+    //     print('Back button pressed!');
+    //   },
+    //   position: Vector2(10, 10),
+    // );
+
+    // add(button);
+
     // Add moving background layer
     // movingBackground =
     //     MovingBackground(imagePath: 'mountain/cloud.png', speed: 200);
     // add(movingBackground);
 
     // Position the teddy bear at `groundY`
-    teddyBear = TeddyBear()..position = Vector2(50, groundY);
+    obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
+    teddyBear = TeddyBear()..position = Vector2(500, groundY);
     add(teddyBear);
 
     scoreText = TextComponent(
@@ -67,9 +113,10 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     );
     add(scoreText);
     add(highScoreText);
+    // Pause button
 
     // Set up obstacle spawning every 2 seconds
-    obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
+
     obstacleTimer.start();
     teddyBear.isRunning = false;
   }
@@ -123,6 +170,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
           style: TextStyle(
               color: Colors.red,
               fontSize: 30,
+              fontWeight: FontWeight.w900,
               fontFamily: GoogleFonts.montserrat().fontFamily)),
     );
     add(gameOverText);
@@ -142,7 +190,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
         .forEach((obstacle) => obstacle.removeFromParent());
 
     // Reset teddy bear position and game state
-    teddyBear.position = Vector2(50, groundY);
+    teddyBear.position = Vector2(500, groundY);
     teddyBear.reset();
     isGameOver = false;
 

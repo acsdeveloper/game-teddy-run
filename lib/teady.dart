@@ -26,7 +26,7 @@ class TeddyBear extends SpriteAnimationComponent
   TeddyBear()
       : super(
           size: Vector2(70, 100), // Adjust the size if necessary
-          anchor: Anchor.bottomLeft,
+          anchor: Anchor.bottomCenter,
         );
 
   @override
@@ -65,19 +65,11 @@ class TeddyBear extends SpriteAnimationComponent
     ]);
     jumpAnimation = SpriteAnimation.spriteList(
       jumpImages.map((image) => Sprite(image)).toList(),
-      stepTime: 0.2,
+      stepTime: 0.3,
     );
 
     // Load collision animation frames
     final collisionImages = await gameRef.images.loadAll([
-      'NUDE/08-Dead/FA_TEDDY_Dead_000.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_001.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_002.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_003.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_004.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_005.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_006.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_007.png',
       'NUDE/08-Dead/FA_TEDDY_Dead_008.png',
       'NUDE/08-Dead/FA_TEDDY_Dead_009.png',
     ]);
@@ -167,8 +159,11 @@ class TeddyBear extends SpriteAnimationComponent
     // Check if collision animation has completed
     if (isColliding) {
       collisionTicker.update(dt);
+      gameRef.obstacleTimer.stop();
+      gameRef.overlays.add('GameOver');
+
       if (collisionTicker.done()) {
-        gameRef.overlays.add('GameOver'); // Show Game Over overlay
+        // Show Game Over overlay
         gameRef.pauseEngine(); // Pause the game
       }
     }

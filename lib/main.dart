@@ -16,8 +16,8 @@ void main() async {
   // Set the app to full-screen mode
   // Lock the orientation to portrait mode
   await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
   ]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
@@ -98,15 +98,13 @@ class StartScreen extends StatelessWidget {
 }
 
 class GameScreen extends StatelessWidget {
-  final game = SuperDashGame();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           GameWidget(
-            game: game,
+            game: SuperDashGame(),
             overlayBuilderMap: {
               'GameOver': (BuildContext context, SuperDashGame game) {
                 return GameOverOverlay(game: game);

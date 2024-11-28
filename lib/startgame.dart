@@ -34,11 +34,12 @@ class StartGameOverlay extends StatelessWidget {
             ),
             onPressed: () {
               game.overlays.remove('StartGame'); // Hide the start overlay
-              obstacleTimer =
-                  Timer(2, onTick: SuperDashGame().spawnObstacle, repeat: true);
+              obstacleTimer = Timer(1.5,
+                  onTick: SuperDashGame().spawnObstacle, repeat: true);
               obstacleTimer.start();
               game.startGame();
               SuperDashGame().teddyBear.isRunning = true;
+
               // Call startGame to initialize the game start
             },
             icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),

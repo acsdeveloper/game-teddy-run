@@ -5,11 +5,13 @@ class ButtonWidget extends StatelessWidget {
   final String? text;
   final IconData? icon;
   final VoidCallback onPressed;
+  final bool restrictWidth;
 
   const ButtonWidget({
     this.text,
     this.icon,
     required this.onPressed,
+    this.restrictWidth = false,
   });
 
   Color _lighten(Color color, [double amount = 0.1]) {
@@ -33,9 +35,9 @@ class ButtonWidget extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            _lighten(AppColors.scoreColor),
-            AppColors.scoreColor,
-            _darken(AppColors.scoreColor),
+            _lighten(scoreColor),
+            scoreColor,
+            _darken(scoreColor),
           ],
         ),
         boxShadow: [
@@ -53,11 +55,11 @@ class ButtonWidget extends StatelessWidget {
       ),
       child: icon != null
           ? IconButton(
-              color: AppColors.textColorWhite,
+              color: textColorWhite,
               onPressed: onPressed,
               icon: Icon(
                 icon,
-                size: 24.0,
+                size: 50.0,
               ),
             )
           : Material(
@@ -67,22 +69,46 @@ class ButtonWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    text ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                      color: AppColors.textColorWhite,
-                      fontFamily: 'Montserrat',
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(0.2),
-                          offset: const Offset(1, 1),
-                          blurRadius: 2,
+                  child: restrictWidth
+                      ? Wrap(
+                          alignment: WrapAlignment.center,
+                          children: [
+                            Text(
+                              text ?? '',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: textColorWhite,
+                                fontFamily: 'Montserrat',
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    offset: const Offset(1, 1),
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Center(
+                          child: Text(
+                            text ?? '',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                              color: textColorWhite,
+                              fontFamily: 'Montserrat',
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  offset: const Offset(1, 1),
+                                  blurRadius: 2,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ),

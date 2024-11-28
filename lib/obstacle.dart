@@ -34,7 +34,7 @@ class Obstacle extends SpriteComponent
     super.update(dt);
 
     // Increase speed based on score
-    double speed = baseSpeed + (gameRef.score / 10).clamp(0, 800);
+    double speed = baseSpeed + (gameRef.score / 10).clamp(0, 80000);
 // Limit speed increase
 
     // Update obstacle position with the new speed

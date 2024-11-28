@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teddyRun/constent/buttoncontionser.dart';
 import 'package:teddyRun/constent/stringconst.dart';
 
 import 'super_dash_game.dart';
@@ -26,22 +27,31 @@ class GameOverOverlay extends StatelessWidget {
                 fontFamily: GoogleFonts.montserrat().fontFamily),
           ),
           const SizedBox(height: 20),
-          ElevatedButton.icon(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.blue)),
-            onPressed: () {
-              game.resetGame(); // Call resetGame on restart
-              game.overlays.remove('GameOver'); // Hide overlay
-              // Resume the game engine
-            },
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            label: Text(
-              StringConstants.tryAgain,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: GoogleFonts.montserrat().fontFamily),
-            ),
-          ),
+          AppConstants.gradientContainer(
+              icon: Icons.refresh,
+              text: StringConstants.tryAgain,
+              onTap: () {
+                game.resetGame(); // Call resetGame on restart
+                game.overlays.remove('GameOver'); // Hide overlay
+                // Resume the game engine
+              }),
+
+          // ElevatedButton.icon(
+          //   style: ButtonStyle(
+          //       backgroundColor: MaterialStateProperty.all(Colors.blue)),
+          //   onPressed: () {
+          //     game.resetGame(); // Call resetGame on restart
+          //     game.overlays.remove('GameOver'); // Hide overlay
+          //     // Resume the game engine
+          //   },
+          //   icon: const Icon(Icons.refresh, color: Colors.white),
+          //   label: Text(
+          //     StringConstants.tryAgain,
+          //     style: TextStyle(
+          //         color: Colors.white,
+          //         fontFamily: GoogleFonts.montserrat().fontFamily),
+          //   ),
+          // ),
         ],
       ),
     );
