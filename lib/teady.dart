@@ -3,6 +3,8 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:vibration/vibration.dart';
 import 'super_dash_game.dart';
 import 'obstacle.dart';
 import 'dart:math';
@@ -19,7 +21,7 @@ class TeddyBear extends SpriteAnimationComponent
   bool isRunning = false; // Track running state
 
   final double initialVelocityY = 1000; // Vertical speed for higher jump
-  final double gravity = 300; // Gravity to control the descent
+  final double gravity = 400; // Gravity to control the descent
   double time = 0; // Track jump time
   late double velocityY; // Vertical velocity
 
@@ -175,10 +177,16 @@ class TeddyBear extends SpriteAnimationComponent
     super.onCollision(intersectionPoints, other);
 
     if (other is Obstacle && !isColliding) {
+      FlameAudio.bgm.stop();
+      Vibration.hasVibrator().then((hasVibrator) {
+        if (hasVibrator ?? false) {
+          Vibration.vibrate(duration: 80); // Vibrate for 100ms
+        }
+      });
       // Trigger collision animation only if not already colliding
       isColliding = true;
       animation = collisionAnimation; // Set collision animation
-      collisionTicker.reset(); // Start the collision ticker
+      //collisionTicker.reset(); // Start the collision ticker
     }
   }
 

@@ -1,16 +1,21 @@
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:teddyRun/background.dart';
+
+import 'package:teddyRun/main.dart';
 import 'package:teddyRun/movingbackground.dart';
 import 'package:teddyRun/teady.dart';
 
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+
 import 'obstacle.dart';
 
-class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
+class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late TeddyBear teddyBear;
   late Timer obstacleTimer;
   int score = 0;
@@ -19,13 +24,24 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
   late TextComponent highScoreText;
   int highScore = 0;
   late MovingBackground movingBackground;
+  bool isMusicOn = true; // Track if music should play
 
   double groundY = 0; // Will be set dynamically in onLoad
   bool ispaused = false;
+  late SpriteButtonComponent avatarButton;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    // Load the music preference from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    isMusicOn = prefs.getBool('musicOn') ?? true; // Default to true if not set
+
+    // Play background music if enabled
+    if (isMusicOn) {
+      FlameAudio.bgm.play('game.mp3');
+    }
 
     // Set `groundY` based on screen size to keep elements at the bottom
     groundY =
@@ -35,8 +51,8 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     highScore = await _loadHighScore();
     highScoreText = TextComponent(
       anchor: Anchor.topLeft,
-      text: 'Best Score : $highScore',
-      position: Vector2(size.x - 150, 31),
+      text: 'Best Score :${formatScore(highScore)}',
+      position: Vector2(size.x - 180, 15),
       textRenderer: TextPaint(
           style: TextStyle(
               color: Colors.black,
@@ -44,12 +60,8 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
               fontFamily: GoogleFonts.montserrat().fontFamily)),
     );
 
-    // Initialize background, teddy bear, and score display
-    // add(Background(
-    //   imagePath: 'screen/background.jpg',
-    // ));
     add(MovingBackground(
-        imagePath: "screen/backgroundfn.png",
+        imagePath: "screen/background.png",
         invertimagePath: "screen/invertedbackground.png",
         speed: 400)
       ..size = Vector2(size.x * 5, size.y));
@@ -58,53 +70,14 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
         invertimagePath: "screen/cloud.png",
         speed: 20)
       ..size = Vector2(size.x, size.y / 3));
-    // final button = ButtonComponent(
-    //   button: TextComponent(
-    //     size: Vector2(30, 30),
-    //     text: ispaused ? "||" : "|>",
-    //     textRenderer: TextPaint(
-    //         style: const TextStyle(color: Colors.white, fontSize: 18)),
-    //   ),
-    //   onPressed: () {
-    //     if (ispaused == false) {
-    //       pauseEngine();
-    //       ispaused = true;
-    //     } else {
-    //       resumeEngine();
-    //       ispaused = false;
-    //     }
-    //   },
-    //   position: Vector2(300, 10),
-    // );
 
-    // final button = HudButtonComponent(
-    //   button: TextComponent(
-
-    //     text: 'Back',
-    //     textRenderer: TextPaint(
-    //         style: const TextStyle(color: Colors.white, fontSize: 18)),
-    //   ),
-    //   onPressed: () {
-    //     print('Back button pressed!');
-    //   },
-    //   position: Vector2(10, 10),
-    // );
-
-    // add(button);
-
-    // Add moving background layer
-    // movingBackground =
-    //     MovingBackground(imagePath: 'mountain/cloud.png', speed: 200);
-    // add(movingBackground);
-
-    // Position the teddy bear at `groundY`
     obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
     teddyBear = TeddyBear()..position = Vector2(500, groundY);
     add(teddyBear);
 
     scoreText = TextComponent(
       text: 'Score: 0',
-      position: Vector2(10, 30),
+      position: Vector2(size.x - 180, 35),
       textRenderer: TextPaint(
           style: TextStyle(
               color: Colors.black,
@@ -113,11 +86,59 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     );
     add(scoreText);
     add(highScoreText);
-    // Pause button
 
-    // Set up obstacle spawning every 2 seconds
+    avatarButton = SpriteButtonComponent(
+      position: Vector2(60, 10),
+      size: Vector2(40, 40),
+      button:
+          await Sprite.load(ispaused ? "screen/pause.png" : "screen/play.png"),
+      onPressed: () async {
+        if (!isGameOver) {
+          if (!ispaused) {
+            FlameAudio.bgm.stop();
+            pauseEngine();
+            ispaused = true;
+            avatarButton.button = await Sprite.load("screen/play.png");
+          } else {
+            if (isMusicOn) {
+              FlameAudio.bgm.play('game.mp3');
+            }
+            resumeEngine();
+            ispaused = false;
+            avatarButton.button = await Sprite.load("screen/pause.png");
+          }
+        }
+      },
+    );
 
-    obstacleTimer.start();
+    add(avatarButton);
+    add(SpriteButtonComponent(
+        button: await Sprite.load("screen/back.png"),
+        position: Vector2(20, 15),
+        size: Vector2(30, 30),
+        onPressed: () {
+          if (isMusicOn) {
+            FlameAudio.bgm.stop();
+          }
+          pauseEngine(); // Pause the game when navigating back to the home screen
+          Navigator.pushAndRemoveUntil(
+            buildContext!, // Pass the buildContext of the FlameGame
+            MaterialPageRoute(builder: (context) => StartScreen()),
+            (route) => false, // Remove all previous routes
+          );
+        }));
+    add(SpriteButtonComponent(
+        button: await Sprite.load("screen/settings.png"),
+        position: Vector2(120, 15),
+        size: Vector2(30, 30),
+        onPressed: () {
+          overlays.add('Settings');
+          if (isMusicOn) {
+            FlameAudio.bgm.stop();
+          }
+          pauseEngine(); // Pause the game when navigating back to the home screen
+        }));
+
     teddyBear.isRunning = false;
   }
 
@@ -130,10 +151,10 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
 
       // Update score over time
       score += (dt * 90).toInt();
-      scoreText.text = 'Score: $score';
+      scoreText.text = 'Score: ${formatScore(score)}';
       if (score > highScore) {
         highScore = score;
-        highScoreText.text = "Best Score: $score";
+        highScoreText.text = "Best Score: ${formatScore(score)}";
         await _saveHighScore(score);
       }
     }
@@ -151,6 +172,7 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   void gameOver() async {
     isGameOver = true;
+
     obstacleTimer.stop();
     pauseEngine();
 
@@ -158,10 +180,9 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     if (score > highScore) {
       highScore = score;
       await _saveHighScore(highScore);
-      highScoreText.text = 'Best Score: $highScore';
+      highScoreText.text = 'Best Score: ${formatScore(highScore)}';
     }
 
-    // Display a game-over message
     final gameOverText = TextComponent(
       text: 'Game Over!',
       position: Vector2(size.x / 2, size.y / 2),
@@ -170,38 +191,35 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
           style: TextStyle(
               color: Colors.red,
               fontSize: 30,
-              fontWeight: FontWeight.w900,
               fontFamily: GoogleFonts.montserrat().fontFamily)),
     );
     add(gameOverText);
   }
 
   @override
-  void onTap() {
+  void onTapUp(TapUpEvent event) {
     if (!isGameOver) {
       teddyBear.jump();
     }
   }
 
   void resetGame() async {
-    // Remove all obstacles and reset game state
     children
         .whereType<Obstacle>()
         .forEach((obstacle) => obstacle.removeFromParent());
 
-    // Reset teddy bear position and game state
     teddyBear.position = Vector2(500, groundY);
     teddyBear.reset();
     isGameOver = false;
 
     await _loadHighScore().then((xscore) async {
       if (xscore > highScore) {
-        highScoreText.text = "Best Score: $xscore";
+        highScoreText.text = "Best Score: ${formatScore(xscore)}";
         await _saveHighScore(xscore);
       }
     });
     score = 0;
-    scoreText.text = 'Score: $score';
+    scoreText.text = 'Score: ${formatScore(score)}';
 
     obstacleTimer.start();
     resumeEngine();
@@ -220,17 +238,15 @@ class SuperDashGame extends FlameGame with TapDetector, HasCollisionDetection {
     return highScore;
   }
 
-  void startGame() {
-    // Set the game to started state and start the timer
-    // isGameStarted = true;
-    score = 0;
-    scoreText.text = 'Score: $score';
-    obstacleTimer.start();
-    isGameOver = false;
-    removeAll([
-      children
-          .whereType<TextComponent>()
-          .firstWhere((child) => child.text == 'Start')
-    ]);
+  String formatScore(int score) {
+    if (score >= 1000000000) {
+      return '${(score / 1000000000).toStringAsFixed(1)}B';
+    } else if (score >= 1000000) {
+      return '${(score / 1000000).toStringAsFixed(1)}M';
+    } else if (score >= 1000) {
+      return '${(score / 1000).toStringAsFixed(1)}K';
+    } else {
+      return score.toString();
+    }
   }
 }

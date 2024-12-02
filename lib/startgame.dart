@@ -24,7 +24,7 @@ class StartGameOverlay extends StatelessWidget {
               fontSize: 30,
               fontWeight: FontWeight.w500,
               color: Colors.red,
-              fontFamily: GoogleFonts.montserrat().fontFamily,
+              // fontFamily: GoogleFonts.montserrat().fontFamily,
             ),
           ),
           const SizedBox(height: 20),
@@ -37,7 +37,7 @@ class StartGameOverlay extends StatelessWidget {
               obstacleTimer = Timer(1.5,
                   onTick: SuperDashGame().spawnObstacle, repeat: true);
               obstacleTimer.start();
-              game.startGame();
+              // game.startGame();
               SuperDashGame().teddyBear.isRunning = true;
 
               // Call startGame to initialize the game start
@@ -47,7 +47,7 @@ class StartGameOverlay extends StatelessWidget {
               "Start",
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: GoogleFonts.montserrat().fontFamily,
+                // fontFamily: GoogleFonts.montserrat().fontFamily,
               ),
             ),
           ),

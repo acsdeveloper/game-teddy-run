@@ -43,13 +43,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  flame: ^1.4.0
+  flame: ^1.22.0
   shared_preferences: ^2.0.13
   hive: ^2.0.0
   hive_flutter: ^1.1.0
   icons_launcher: ^3.0.0
   flutter_native_splash: null
   google_fonts: ^6.2.1
+  vibration: ^1.7.4
+  flame_audio: null
   
 
 dev_dependencies:
@@ -85,6 +87,8 @@ flutter:
     - assets/images/tree/
     - assets/images/screen/
     - assets/images/mountain/
+    - assets/audio/
+
      
 
   # An image asset can refer to one or more resolution-specific "variants", see

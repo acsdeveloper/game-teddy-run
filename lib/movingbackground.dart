@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/extensions.dart';
@@ -68,7 +70,10 @@ class MovingBackground extends PositionComponent {
 
     // Draw the sprite twice to create a looping effect
     sprite.render(canvas, position: Vector2(offsetX, 0), size: size);
-    sprite2.render(canvas, position: Vector2(offsetX + size.x, 0), size: size);
+
+    sprite2.render(canvas,
+        position: Vector2(offsetX + size.x - 10, 0), size: size);
+    // sprite2.render(canvas, position: Vector2(offsetX + size.x, 0), size: size);
   }
 
   stop() {

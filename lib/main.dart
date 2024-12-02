@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:teddyRun/game_over_widget.dart';
+import 'package:teddyRun/settings/settings.dart';
 
 import 'constent/buttoncontionser.dart';
 import 'super_dash_game.dart';
@@ -100,18 +101,27 @@ class StartScreen extends StatelessWidget {
 class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          GameWidget(
-            game: SuperDashGame(),
-            overlayBuilderMap: {
-              'GameOver': (BuildContext context, SuperDashGame game) {
-                return GameOverOverlay(game: game);
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        Navigator.pop(context);
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            GameWidget(
+              game: SuperDashGame(),
+              overlayBuilderMap: {
+                'GameOver': (BuildContext context, SuperDashGame game) {
+                  return GameOverOverlay(game: game);
+                },
+                'Settings': (BuildContext context, SuperDashGame game) {
+                  return Settings(game: game);
+                }
               },
-            },
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
