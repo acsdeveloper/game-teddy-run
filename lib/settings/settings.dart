@@ -32,26 +32,30 @@ class _SettingsState extends State<Settings> {
     });
   }
 
-  // Toggle Music state and save it to SharedPreferences
-  Future<void> _toggleMusicState() async {
+  // Save preferences to SharedPreferences when popup is closed
+  Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('musicOn', isMusicOn);
+    await prefs.setBool('audioOn', isAudioOn);
+  }
+
+  // Toggle Music state without saving immediately
+  void _toggleMusicState() {
     setState(() {
       isMusicOn = !isMusicOn;
     });
-    isMusicOn == true;
     if (isMusicOn) {
       FlameAudio.bgm.play('game.mp3');
+    } else {
+      FlameAudio.bgm.stop();
     }
-    await prefs.setBool('musicOn', isMusicOn);
   }
 
-  // Toggle Audio state and save it to SharedPreferences
-  Future<void> _toggleAudioState() async {
-    final prefs = await SharedPreferences.getInstance();
+  // Toggle Audio state without saving immediately
+  void _toggleAudioState() {
     setState(() {
       isAudioOn = !isAudioOn;
     });
-    await prefs.setBool('audioOn', isAudioOn);
   }
 
   @override
@@ -93,20 +97,20 @@ class _SettingsState extends State<Settings> {
                 ),
 
                 // Audio Toggle Option
-                ListTile(
-                  leading: Icon(
-                    isAudioOn ? Icons.volume_up : Icons.volume_off,
-                    color: isAudioOn ? Colors.blue : Colors.red,
-                  ),
-                  title: Text(
-                    isAudioOn ? "Audio On" : "Audio Off",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: GoogleFonts.montserrat().fontFamily,
-                    ),
-                  ),
-                  onTap: _toggleAudioState,
-                ),
+                // ListTile(
+                //   leading: Icon(
+                //     isAudioOn ? Icons.volume_up : Icons.volume_off,
+                //     color: isAudioOn ? Colors.blue : Colors.red,
+                //   ),
+                //   title: Text(
+                //     isAudioOn ? "SFX On" : "SFX Off",
+                //     style: TextStyle(
+                //       fontSize: 18,
+                //       fontFamily: GoogleFonts.montserrat().fontFamily,
+                //     ),
+                //   ),
+                //   onTap: _toggleAudioState,
+                // ),
               ],
             ),
           ),
@@ -117,7 +121,8 @@ class _SettingsState extends State<Settings> {
             right: 8,
             child: IconButton(
               icon: const Icon(Icons.close, color: Colors.black),
-              onPressed: () {
+              onPressed: () async {
+                await _savePreferences(); // Save preferences on close
                 widget.game.overlays.remove('Settings');
                 widget.game.resumeEngine();
               },

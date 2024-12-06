@@ -72,7 +72,7 @@ class MovingBackground extends PositionComponent {
     sprite.render(canvas, position: Vector2(offsetX, 0), size: size);
 
     sprite2.render(canvas,
-        position: Vector2(offsetX + size.x - 10, 0), size: size);
+        position: Vector2(offsetX + size.x - 20, 0), size: size);
     // sprite2.render(canvas, position: Vector2(offsetX + size.x, 0), size: size);
   }
 

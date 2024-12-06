@@ -20,7 +20,7 @@ class TeddyBear extends SpriteAnimationComponent
   bool isColliding = false;
   bool isRunning = false; // Track running state
 
-  final double initialVelocityY = 1000; // Vertical speed for higher jump
+  final double initialVelocityY = 900; // Vertical speed for higher jump
   final double gravity = 400; // Gravity to control the descent
   double time = 0; // Track jump time
   late double velocityY; // Vertical velocity
@@ -122,6 +122,7 @@ class TeddyBear extends SpriteAnimationComponent
       // Set initial vertical velocity
       velocityY = initialVelocityY;
     }
+    // FlameAudio.play("jump.mp3");
   }
 
   // Override update to simulate vertical jump motion and handle collision animation
@@ -166,6 +167,8 @@ class TeddyBear extends SpriteAnimationComponent
 
       if (collisionTicker.done()) {
         // Show Game Over overlay
+        gameRef.isGameOver = true;
+
         gameRef.pauseEngine(); // Pause the game
       }
     }
