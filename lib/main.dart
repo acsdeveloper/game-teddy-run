@@ -104,7 +104,11 @@ class GameScreen extends StatelessWidget {
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(
+          context, // Pass the buildContext of the FlameGame
+          MaterialPageRoute(builder: (context) => StartScreen()),
+          (route) => false,
+        );
       },
       child: Scaffold(
         body: Stack(

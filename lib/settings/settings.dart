@@ -44,11 +44,6 @@ class _SettingsState extends State<Settings> {
     setState(() {
       isMusicOn = !isMusicOn;
     });
-    if (isMusicOn) {
-      FlameAudio.bgm.play('game.mp3');
-    } else {
-      FlameAudio.bgm.stop();
-    }
   }
 
   // Toggle Audio state without saving immediately
@@ -125,6 +120,13 @@ class _SettingsState extends State<Settings> {
                 await _savePreferences(); // Save preferences on close
                 widget.game.overlays.remove('Settings');
                 widget.game.resumeEngine();
+                if (!isMusicOn) {
+                  // FlameAudio.bgm.play('game.mp3');
+                  FlameAudio.bgm.stop();
+                }
+                if (isMusicOn == true) {
+                  FlameAudio.bgm.play("game.mp3");
+                }
               },
             ),
           ),

@@ -59,6 +59,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
             text: StringConstants.tryAgain,
             onTap: () {
               _playBackgroundMusic(); // Play music based on the preference
+              widget.game.ispaused = true;
               widget.game.resetGame(); // Call resetGame on restart
               widget.game.overlays.remove('GameOver'); // Hide overlay
             },

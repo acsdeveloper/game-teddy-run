@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import 'package:teddyRun/settings/settings.dart';
 import 'obstacle.dart';
 import 'movingbackground.dart';
 import 'teady.dart';
@@ -23,8 +24,8 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late MovingBackground movingBackground;
   bool isMusicOn = true; // Track if music should play
   double groundY = 0; // Will be set dynamically in onLoad
-  bool ispaused = false;
-  late SpriteButtonComponent avatarButton;
+  bool ispaused = true;
+  late SpriteButtonComponent playpauseButton;
   Future<void> preloadAudio() async {
     // Preload jump sound to prevent glitches
     await FlameAudio.audioCache.load("jump.mp3");
@@ -90,8 +91,8 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
 
     final backButton = SpriteButtonComponent(
       button: await Sprite.load("screen/back.png"),
-      position: Vector2(15, 20),
-      size: Vector2(20, 20),
+      position: Vector2(15, 13),
+      size: Vector2(34, 34),
       onPressed: () {
         if (isMusicOn) {
           FlameAudio.bgm.stop();
@@ -104,53 +105,74 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
         );
       },
     );
+    // **Initialize Settings Button with Correct Initial Sprite**
+    Sprite settingsButtonSprite;
+    Sprite settingsButtonDownSprite;
+    late SpriteButtonComponent settingsButton;
 
-    final settingsButton = SpriteButtonComponent(
-      button: await Sprite.load("screen/settings.png"),
-      position: Vector2(45, 15),
+    if (isMusicOn) {
+      settingsButtonSprite = await Sprite.load("screen/speaker.png");
+      settingsButtonDownSprite = await Sprite.load("screen/speaker.png");
+    } else {
+      settingsButtonSprite = await Sprite.load("screen/speakeroff.png");
+      settingsButtonDownSprite = await Sprite.load("screen/speakeroff.png");
+    }
+
+    settingsButton = SpriteButtonComponent(
+      button: settingsButtonSprite,
+      buttonDown: settingsButtonDownSprite,
+      position: Vector2(57.5, 15),
       size: Vector2(30, 30),
-      onPressed: () {
-        overlays.add('Settings');
-        if (isMusicOn) {
-          FlameAudio.bgm.stop();
+      onPressed: () async {
+        if (!isGameOver && ispaused) {
+          if (isMusicOn) {
+            // Turn music off
+            FlameAudio.bgm.stop();
+            settingsButton.button = await Sprite.load("screen/speakeroff.png");
+            settingsButton.buttonDown = await Sprite.load("screen/speaker.png");
+          } else {
+            // Turn music on
+            FlameAudio.bgm.play("game.mp3");
+            settingsButton.button = await Sprite.load("screen/speaker.png");
+            settingsButton.buttonDown =
+                await Sprite.load("screen/speakeroff.png");
+          }
+          isMusicOn = !isMusicOn;
+
+          // Save the updated music state to SharedPreferences
+          await prefs.setBool('musicOn', isMusicOn);
         }
-        pauseEngine();
       },
-    );
-    // **Interactive Components**
-    final pauseButtonSprite =
-        await Sprite.load(!ispaused ? "screen/pause.png" : "screen/play.png");
-    avatarButton = SpriteButtonComponent(
-      position: Vector2(80, 15),
+    ); // Show pause button initially
+
+    final pauseButtonSprite = await Sprite.load("screen/pause.png");
+    final playButtonSprite = await Sprite.load("screen/play.png");
+
+    playpauseButton = SpriteButtonComponent(
+      position: Vector2(100, 15),
       size: Vector2(30, 30),
       button: pauseButtonSprite,
+      buttonDown: playButtonSprite,
       onPressed: () async {
         if (!isGameOver) {
-          if (ispaused) {
-            FlameAudio.bgm.stop();
-            pauseEngine();
-            ispaused = false;
-            avatarButton.button = await Sprite.load("screen/pause.png");
+          ispaused ? pauseEngine() : resumeEngine();
+          if (!ispaused && isMusicOn) {
+            FlameAudio.bgm.play("game.mp3");
           } else {
-            if (isMusicOn) {
-              FlameAudio.bgm.play('game.mp3');
-            }
-            resumeEngine();
-            ispaused = true;
-            avatarButton.button = await Sprite.load("screen/play.png");
+            FlameAudio.bgm.stop();
           }
-          parent!.remove(avatarButton); // Remove the old button
-          parent!.add(avatarButton); // Add it back with the updated sprite
+          ispaused = !ispaused;
         }
       },
     );
 
+    // Add the pause button initially
     add(background);
-    add(clouds);
     add(highScoreText);
+    add(clouds);
     add(teddyBear);
     add(scoreText);
-    add(avatarButton);
+    add(playpauseButton);
     add(backButton);
     add(settingsButton);
 
