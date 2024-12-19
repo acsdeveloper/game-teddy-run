@@ -22,7 +22,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late TextComponent highScoreText;
   int highScore = 0;
   late MovingBackground movingBackground;
-  bool isMusicOn = true; // Track if music should play
+  bool isMusicOn = false; // Track if music should play
   double groundY = 0; // Will be set dynamically in onLoad
   bool ispaused = true;
   late SpriteButtonComponent playpauseButton;
@@ -121,7 +121,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     settingsButton = SpriteButtonComponent(
       button: settingsButtonSprite,
       buttonDown: settingsButtonDownSprite,
-      position: Vector2(57.5, 15),
+      //position: Vector2(57.5, 15),
       size: Vector2(30, 30),
       onPressed: () async {
         if (!isGameOver && ispaused) {
@@ -149,7 +149,9 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     final playButtonSprite = await Sprite.load("screen/play.png");
 
     playpauseButton = SpriteButtonComponent(
-      position: Vector2(100, 15),
+      position: Vector2(57.5, 15),
+
+      // position: Vector2(100, 15),
       size: Vector2(30, 30),
       button: pauseButtonSprite,
       buttonDown: playButtonSprite,
@@ -174,7 +176,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     add(scoreText);
     add(playpauseButton);
     add(backButton);
-    add(settingsButton);
+    // add(settingsButton);
 
     // **Music**
     if (!isGameOver && isMusicOn) {
