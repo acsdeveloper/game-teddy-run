@@ -2,7 +2,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:teddyRun/super_dash_game.dart';
+import 'package:teddyrun/super_dash_game.dart';
 
 class Settings extends StatefulWidget {
   final SuperDashGame game;

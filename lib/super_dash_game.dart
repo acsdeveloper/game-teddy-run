@@ -10,7 +10,7 @@ import 'package:teddyrun/background.dart';
 import 'package:teddyrun/movingbackground.dart';
 import 'package:teddyrun/teady.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
-import 'package:teddyRun/settings/settings.dart';
+import 'package:teddyrun/settings/settings.dart';
 import 'obstacle.dart';
 import 'movingbackground.dart';
 import 'teady.dart';
