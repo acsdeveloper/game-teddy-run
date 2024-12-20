@@ -50,7 +50,7 @@ dependencies:
   icons_launcher: ^3.0.0
   flutter_native_splash: null
   google_fonts: ^6.2.1
-  vibration: ^1.7.4
+  vibration: 2.0.1
   flame_audio: null
   
 
