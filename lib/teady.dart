@@ -3,6 +3,8 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:vibration/vibration.dart';
 import 'super_dash_game.dart';
 import 'obstacle.dart';
 import 'dart:math';
@@ -18,15 +20,15 @@ class TeddyBear extends SpriteAnimationComponent
   bool isColliding = false;
   bool isRunning = false; // Track running state
 
-  final double initialVelocityY = 1000; // Vertical speed for higher jump
-  final double gravity = 300; // Gravity to control the descent
+  final double initialVelocityY = 900; // Vertical speed for higher jump
+  final double gravity = 400; // Gravity to control the descent
   double time = 0; // Track jump time
   late double velocityY; // Vertical velocity
 
   TeddyBear()
       : super(
           size: Vector2(70, 100), // Adjust the size if necessary
-          anchor: Anchor.bottomLeft,
+          anchor: Anchor.bottomCenter,
         );
 
   @override
@@ -65,19 +67,11 @@ class TeddyBear extends SpriteAnimationComponent
     ]);
     jumpAnimation = SpriteAnimation.spriteList(
       jumpImages.map((image) => Sprite(image)).toList(),
-      stepTime: 0.2,
+      stepTime: 0.3,
     );
 
     // Load collision animation frames
     final collisionImages = await gameRef.images.loadAll([
-      'NUDE/08-Dead/FA_TEDDY_Dead_000.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_001.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_002.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_003.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_004.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_005.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_006.png',
-      'NUDE/08-Dead/FA_TEDDY_Dead_007.png',
       'NUDE/08-Dead/FA_TEDDY_Dead_008.png',
       'NUDE/08-Dead/FA_TEDDY_Dead_009.png',
     ]);
@@ -128,6 +122,7 @@ class TeddyBear extends SpriteAnimationComponent
       // Set initial vertical velocity
       velocityY = initialVelocityY;
     }
+    // FlameAudio.play("jump.mp3");
   }
 
   // Override update to simulate vertical jump motion and handle collision animation
@@ -167,8 +162,13 @@ class TeddyBear extends SpriteAnimationComponent
     // Check if collision animation has completed
     if (isColliding) {
       collisionTicker.update(dt);
+      gameRef.obstacleTimer.stop();
+      gameRef.overlays.add('GameOver');
+
       if (collisionTicker.done()) {
-        gameRef.overlays.add('GameOver'); // Show Game Over overlay
+        // Show Game Over overlay
+        gameRef.isGameOver = true;
+
         gameRef.pauseEngine(); // Pause the game
       }
     }
@@ -180,10 +180,16 @@ class TeddyBear extends SpriteAnimationComponent
     super.onCollision(intersectionPoints, other);
 
     if (other is Obstacle && !isColliding) {
+      FlameAudio.bgm.stop();
+      Vibration.hasVibrator().then((hasVibrator) {
+        if (hasVibrator ?? false) {
+          Vibration.vibrate(duration: 80); // Vibrate for 100ms
+        }
+      });
       // Trigger collision animation only if not already colliding
       isColliding = true;
       animation = collisionAnimation; // Set collision animation
-      collisionTicker.reset(); // Start the collision ticker
+      //collisionTicker.reset(); // Start the collision ticker
     }
   }
 
