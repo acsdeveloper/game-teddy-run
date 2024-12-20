@@ -1,5 +1,3 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
@@ -14,28 +12,65 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('gameBox');
+  var isfromapp = true;
   // Set the app to full-screen mode
   // Lock the orientation to portrait mode
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeRight,
-    DeviceOrientation.landscapeLeft,
-  ]);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // await SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.landscapeRight,
+  //   DeviceOrientation.landscapeLeft,
+  // ]);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  runApp(MyApp());
+  runApp(MyApp(isfromapp));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  var fromapp;
+  MyApp(bool isfromapp, {super.key}) {
+    fromapp = isfromapp;
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState(fromapp);
+}
+
+class _MyAppState extends State<MyApp> {
+  var isfromapp;
+  _MyAppState(fromapp) {
+    fromapp = isfromapp;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    oninit(); // Call oninit here
+  }
+
+  Future<void> oninit() async {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StartScreen(),
+      home: StartScreen(isfromapp),
     );
   }
 }
 
+// ... (rest of your code, StartScreen and GameScreen remain the same)
+
 class StartScreen extends StatelessWidget {
+  var isapp;
+  StartScreen(isfromapp, {super.key}) {
+    isapp = isfromapp;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +106,7 @@ class StartScreen extends StatelessWidget {
                   text: "Exit",
                   icon: Icons.exit_to_app,
                   onTap: () {
-                    SystemNavigator.pop();
+                    isapp ? SystemNavigator.pop() : Navigator.pop(context);
                   })
               // ButtonWidget(
               //   text: "Start",
@@ -99,6 +134,8 @@ class StartScreen extends StatelessWidget {
 }
 
 class GameScreen extends StatelessWidget {
+  const GameScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -106,7 +143,7 @@ class GameScreen extends StatelessWidget {
       onPopInvoked: (didPop) {
         Navigator.pushAndRemoveUntil(
           context, // Pass the buildContext of the FlameGame
-          MaterialPageRoute(builder: (context) => StartScreen()),
+          MaterialPageRoute(builder: (context) => StartScreen(true)),
           (route) => false,
         );
       },
