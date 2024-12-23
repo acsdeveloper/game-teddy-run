@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:teddyrun/game_over_widget.dart';
 import 'package:teddyrun/settings/settings.dart';
-
 import 'constent/buttoncontionser.dart';
 import 'super_dash_game.dart';
 
@@ -25,6 +24,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  var fromapp;
   MyApp(bool isfromapp, {super.key}) {
     fromapp = isfromapp;
   }
@@ -105,7 +105,9 @@ class StartScreen extends StatelessWidget {
                   text: "Exit",
                   icon: Icons.exit_to_app,
                   onTap: () {
-                    Navigator.pop(context);
+                     Navigator.pop(context);
+                                         Navigator.pop(context);
+
                   })
               // ButtonWidget(
               //   text: "Start",
