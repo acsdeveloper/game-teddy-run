@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:teddyrun/constent/Colors.dart';
 import 'package:teddyrun/game_over_widget.dart';
 import 'package:teddyrun/settings/settings.dart';
 import 'constent/buttoncontionser.dart';
@@ -73,6 +74,22 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.exit_to_app_rounded,
+            color: textColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            // showExitConfirmationOverlay(context);
+          },
+        ),
+        iconTheme: IconThemeData(
+          color: textColorWhite,
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Container(
         color: Colors.white,
         // decoration: BoxDecoration(
