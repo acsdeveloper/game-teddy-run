@@ -25,7 +25,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  var fromapp;
+  var fromapp = true;
   MyApp(bool isfromapp, {super.key}) {
     fromapp = isfromapp;
   }
