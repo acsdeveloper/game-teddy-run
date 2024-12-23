@@ -101,12 +101,12 @@ class StartScreen extends StatelessWidget {
               Container(
                 height: 30,
               ),
-              AppConstants.gradientContainer(
-                  text: "Exit",
-                  icon: Icons.exit_to_app,
-                  onTap: () {
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  })
+              // AppConstants.gradientContainer(
+              //     text: "Exit",
+              //     icon: Icons.exit_to_app,
+              //     onTap: () {
+              //       Navigator.pop(context);
+              //     })
               // ButtonWidget(
               //   text: "Start",
               //   icon: Icons.play_arrow,
