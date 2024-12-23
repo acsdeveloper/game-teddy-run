@@ -105,9 +105,7 @@ class StartScreen extends StatelessWidget {
                   text: "Exit",
                   icon: Icons.exit_to_app,
                   onTap: () {
-                     Navigator.pop(context);
-                                         Navigator.pop(context);
-
+                    Navigator.popUntil(context, (route) => route.isFirst);
                   })
               // ButtonWidget(
               //   text: "Start",
