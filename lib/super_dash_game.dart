@@ -135,7 +135,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
             settingsButton.buttonDown = await Sprite.load("screen/speaker.png");
           } else {
             // Turn music on
-            FlameAudio.bgm.play("game.mp3");
+            // FlameAudio.bgm.play("game.mp3");
             settingsButton.button = await Sprite.load("screen/speaker.png");
             settingsButton.buttonDown =
                 await Sprite.load("screen/speakeroff.png");
@@ -162,7 +162,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
         if (!isGameOver) {
           ispaused ? pauseEngine() : resumeEngine();
           if (!ispaused && isMusicOn) {
-            FlameAudio.bgm.play("game.mp3");
+            // FlameAudio.bgm.play("game.mp3");
           } else {
             FlameAudio.bgm.stop();
           }
@@ -183,7 +183,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
 
     // **Music**
     if (!isGameOver && isMusicOn) {
-      FlameAudio.bgm.play('game.mp3');
+      // FlameAudio.bgm.play('game.mp3');
     }
 
     // Initial state for TeddyBear
