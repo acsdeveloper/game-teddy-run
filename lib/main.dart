@@ -76,16 +76,15 @@ class StartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.exit_to_app_rounded,
             color: textColor,
           ),
           onPressed: () {
-            Navigator.pop(context);
-            // showExitConfirmationOverlay(context);
+            Navigator.popUntil(context, (route) => route.isFirst);
           },
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: textColorWhite,
         ),
         backgroundColor: Colors.white,
@@ -101,23 +100,24 @@ class StartScreen extends StatelessWidget {
         // ),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Image.asset(
                 'assets/images/screen/teddyicon.jpg',
-                width: 200, // Adjust dimensions as needed
+                width: 200,
               ),
-              const SizedBox(height: 50),
               AppConstants.gradientContainer(
                   text: "Start",
                   icon: Icons.play_arrow,
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => GameScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GameScreen()));
                   }),
-              Container(
-                height: 30,
-              ),
+              // Container(
+              //   height: 30,
+              // ),
               // AppConstants.gradientContainer(
               //     text: "Exit",
               //     icon: Icons.exit_to_app,
@@ -158,7 +158,7 @@ class GameScreen extends StatelessWidget {
       canPop: true,
       onPopInvoked: (didPop) {
         Navigator.pushAndRemoveUntil(
-          context, // Pass the buildContext of the FlameGame
+          context,
           MaterialPageRoute(builder: (context) => StartScreen(true)),
           (route) => false,
         );
