@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:teddyRun/constent/Colors.dart';
 import 'package:teddyRun/game_over_widget.dart';
 import 'package:teddyRun/settings/settings.dart';
 
@@ -74,40 +75,49 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.exit_to_app_rounded,
+            color: textColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            // showExitConfirmationOverlay(context);
+          },
+        ),
+        iconTheme: const IconThemeData(
+          color: textColorWhite,
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Container(
         color: Colors.white,
-        // decoration: BoxDecoration(
-        //   gradient: LinearGradient(
-        //     colors:Colors.white,
-        //     begin: Alignment.topCenter,
-        //     end: Alignment.bottomCenter,
-        //   ),
-        // ),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Image.asset(
                 'assets/images/screen/teddyicon.jpg',
-                width: 200, // Adjust dimensions as needed
+                width: 200,
               ),
-              const SizedBox(height: 50),
               AppConstants.gradientContainer(
                   text: "Start",
                   icon: Icons.play_arrow,
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => GameScreen()));
+                        MaterialPageRoute(
+                            builder: (context) => const GameScreen()));
                   }),
-              Container(
-                height: 30,
-              ),
-              AppConstants.gradientContainer(
-                  text: "Exit",
-                  icon: Icons.exit_to_app,
-                  onTap: () {
-                    isapp ? SystemNavigator.pop() : Navigator.pop(context);
-                  })
+              // Container(
+              //   height: 30,
+              // ),
+              // AppConstants.gradientContainer(
+              //     text: "Exit",
+              //     icon: Icons.exit_to_app,
+              //     onTap: () {
+              //       Navigator.pop(context);
+              //     })
               // ButtonWidget(
               //   text: "Start",
               //   icon: Icons.play_arrow,
@@ -141,11 +151,7 @@ class GameScreen extends StatelessWidget {
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        Navigator.pushAndRemoveUntil(
-          context, // Pass the buildContext of the FlameGame
-          MaterialPageRoute(builder: (context) => StartScreen(true)),
-          (route) => false,
-        );
+        Navigator.popUntil(context, (route) => route.isFirst);
       },
       child: Scaffold(
         body: Stack(
