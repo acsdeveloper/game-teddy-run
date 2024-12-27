@@ -74,21 +74,21 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.exit_to_app_rounded,
-            color: textColor,
-          ),
-          onPressed: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
-        ),
-        iconTheme: const IconThemeData(
-          color: textColorWhite,
-        ),
-        backgroundColor: Colors.white,
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: const Icon(
+      //       Icons.exit_to_app_rounded,
+      //       color: textColor,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.popUntil(context, (route) => route.isFirst);
+      //     },
+      //   ),
+      //   iconTheme: const IconThemeData(
+      //     color: textColorWhite,
+      //   ),
+      //   backgroundColor: Colors.white,
+      // ),
       body: Container(
         color: Colors.white,
         // decoration: BoxDecoration(
