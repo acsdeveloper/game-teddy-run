@@ -211,14 +211,14 @@ class GameScreen extends StatelessWidget {
           targetContext,
           MaterialPageRoute(
               builder: (context) =>
-                  StartScreen(optionalContext: optionalContext)),
+                  StartScreen(optionalContext: targetContext)),
           (route) => false,
         );
         return false;
       },
       child: Scaffold(
         body: GameWidget(
-          game: SuperDashGame(optionalContext ?? context),
+          game: SuperDashGame(optionalContext),
           overlayBuilderMap: {
             'GameOver': (BuildContext context, SuperDashGame game) {
               return GameOverOverlay(game: game);
