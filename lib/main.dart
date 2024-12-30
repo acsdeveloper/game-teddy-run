@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:teddyrun/constent/Colors.dart';
+import 'package:teddyrun/constent/button.dart';
 import 'package:teddyrun/game_over_widget.dart';
 import 'package:teddyrun/settings/settings.dart';
 import 'constent/buttoncontionser.dart';
@@ -70,7 +72,8 @@ class _StartScreenState extends State<StartScreen> {
             color: textColor,
           ),
           onPressed: () {
-            showExitConfirmationOverlay(_context);
+            showExitConfirmationOverlay(
+                _context, isBack: true, "Do you really want to exit the Game?");
           },
         ),
         iconTheme: IconThemeData(
@@ -107,64 +110,74 @@ class _StartScreenState extends State<StartScreen> {
     );
   }
 
-  void showExitConfirmationOverlay(BuildContext context) {
-    OverlayEntry? _overlayEntry;
+  showExitConfirmationOverlay(
+    BuildContext context,
+    String text, {
+    bool isBack = false,
+  }) {
+    final overlay = Overlay.of(context);
 
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: 50,
-        left: 50,
+    // Declare the overlayEntry outside the builder function to avoid scoping issues
+    OverlayEntry? overlayEntry;
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
         child: Material(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            width: MediaQuery.of(context).size.width * 0.8,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Do you want to Exit?',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+          // Use Material to ensure proper theming and rendering
+          color:
+              overlayColor.withOpacity(0.9), // Apply the opacity here directly
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16.0),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.90),
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      color: textColor,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.none,
                     ),
                   ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _overlayEntry?.remove();
-                          _overlayEntry = null;
-                        },
-                        child: Text('No'),
-                        style: ElevatedButton.styleFrom(),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
+                ),
+                const SizedBox(height: 40.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ButtonWidget(
+                      onPressed: () {
+                        // Remove overlay entry after pressing No
+                        overlayEntry?.remove();
+                      },
+                      text: "No",
+                    ),
+                    const SizedBox(width: 25.0),
+                    ButtonWidget(
+                      onPressed: () {
+                        // Remove overlay entry after pressing Yes
+                        overlayEntry?.remove();
+                        if (isBack) {
                           Navigator.of(context).pop();
-                        },
-                        child: Text('Yes'),
-                        style: ElevatedButton.styleFrom(),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                        }
+                      },
+                      text: "Yes",
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
       ),
     );
-    Overlay.of(context).insert(_overlayEntry!);
+
+    // Insert the overlay entry after it's fully declared
+    overlay.insert(overlayEntry);
   }
 }
 
