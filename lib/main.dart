@@ -17,15 +17,10 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
+class MyApp extends StatelessWidget {
+  final BuildContext? optionalContext;
 
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
+  MyApp({this.optionalContext, super.key}) {
     oninit();
   }
 
@@ -41,13 +36,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StartScreen(),
+      home: StartScreen(optionalContext: optionalContext),
     );
   }
 }
 
 class StartScreen extends StatefulWidget {
-  const StartScreen({super.key});
+  final BuildContext? optionalContext;
+
+  const StartScreen({this.optionalContext, super.key});
 
   @override
   State<StartScreen> createState() => _StartScreenState();
@@ -66,16 +63,21 @@ class _StartScreenState extends State<StartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.exit_to_app_rounded,
-            color: textColor,
-          ),
-          onPressed: () {
-            showExitConfirmationOverlay(
-                _context, isBack: true, "Do you really want to exit the Game?");
-          },
-        ),
+        leading: widget.optionalContext != null
+            ? IconButton(
+                icon: Icon(
+                  Icons.exit_to_app_rounded,
+                  color: textColor,
+                ),
+                onPressed: () {
+                  showExitConfirmationOverlay(
+                    _context,
+                    "Do you really want to exit the game?",
+                    isBack: true,
+                  );
+                },
+              )
+            : null,
         iconTheme: IconThemeData(
           color: textColorWhite,
         ),
@@ -96,8 +98,10 @@ class _StartScreenState extends State<StartScreen> {
                 text: "Start",
                 icon: Icons.play_arrow,
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GameScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GameScreen()),
+                  );
                 },
               ),
               Container(
@@ -110,22 +114,19 @@ class _StartScreenState extends State<StartScreen> {
     );
   }
 
-  showExitConfirmationOverlay(
+  void showExitConfirmationOverlay(
     BuildContext context,
     String text, {
     bool isBack = false,
   }) {
     final overlay = Overlay.of(context);
 
-    // Declare the overlayEntry outside the builder function to avoid scoping issues
     OverlayEntry? overlayEntry;
 
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned.fill(
         child: Material(
-          // Use Material to ensure proper theming and rendering
-          color:
-              overlayColor.withOpacity(0.9), // Apply the opacity here directly
+          color: overlayColor.withOpacity(0.9),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -133,7 +134,8 @@ class _StartScreenState extends State<StartScreen> {
                 const SizedBox(height: 16.0),
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.90),
+                    maxWidth: MediaQuery.of(context).size.width * 0.90,
+                  ),
                   child: Text(
                     text,
                     textAlign: TextAlign.center,
@@ -151,7 +153,6 @@ class _StartScreenState extends State<StartScreen> {
                   children: [
                     ButtonWidget(
                       onPressed: () {
-                        // Remove overlay entry after pressing No
                         overlayEntry?.remove();
                       },
                       text: "No",
@@ -159,7 +160,6 @@ class _StartScreenState extends State<StartScreen> {
                     const SizedBox(width: 25.0),
                     ButtonWidget(
                       onPressed: () {
-                        // Remove overlay entry after pressing Yes
                         overlayEntry?.remove();
                         if (isBack) {
                           Navigator.of(context).pop();
@@ -176,7 +176,6 @@ class _StartScreenState extends State<StartScreen> {
       ),
     );
 
-    // Insert the overlay entry after it's fully declared
     overlay.insert(overlayEntry);
   }
 }
@@ -190,7 +189,7 @@ class GameScreen extends StatelessWidget {
       onWillPop: () async {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => StartScreen()),
+          MaterialPageRoute(builder: (context) => const StartScreen()),
           (route) => false,
         );
         return false;
