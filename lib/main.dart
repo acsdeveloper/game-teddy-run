@@ -14,13 +14,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('gameBox');
-  runApp(MyApp());
+  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final BuildContext? optionalContext;
+  final BuildContext optionalContext;
 
-  MyApp({this.optionalContext, super.key}) {
+  MyApp({required this.optionalContext, super.key}) {
     oninit();
   }
 
@@ -42,9 +42,9 @@ class MyApp extends StatelessWidget {
 }
 
 class StartScreen extends StatefulWidget {
-  final BuildContext? optionalContext;
+  final BuildContext optionalContext;
 
-  const StartScreen({this.optionalContext, super.key});
+  const StartScreen({required this.optionalContext, super.key});
 
   @override
   State<StartScreen> createState() => _StartScreenState();
@@ -196,16 +196,16 @@ class _StartScreenState extends State<StartScreen> {
 }
 
 class GameScreen extends StatelessWidget {
-  final BuildContext? optionalContext; // Optional parameter
+  final BuildContext optionalContext; // Optional parameter
 
-  const GameScreen({super.key, this.optionalContext});
+  const GameScreen({super.key, required this.optionalContext});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         // Use optionalContext if provided; otherwise, use the current context
-        BuildContext targetContext = optionalContext ?? context;
+        BuildContext targetContext = optionalContext;
 
         Navigator.pushAndRemoveUntil(
           targetContext,

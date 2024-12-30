@@ -18,7 +18,7 @@ import 'main.dart';
 
 class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late TeddyBear teddyBear;
-  late BuildContext? optionalcontext;
+  late BuildContext optionalcontext;
   late Timer obstacleTimer;
   int score = 0;
   bool isGameOver = false;
@@ -36,7 +36,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     await FlameAudio.audioCache.load("game.mp3");
   }
 
-  SuperDashGame(context) {
+  SuperDashGame(BuildContext context) {
     context = optionalcontext;
   }
 
