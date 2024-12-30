@@ -71,7 +71,7 @@ class _StartScreenState extends State<StartScreen> {
                 ),
                 onPressed: () {
                   showExitConfirmationOverlay(
-                    _context,
+                    widget.optionalContext,
                     "Do you really want to exit the game?",
                     isBack: true,
                   );
@@ -115,11 +115,24 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   void showExitConfirmationOverlay(
-    BuildContext context,
+    BuildContext? context, // Make context optional
     String text, {
     bool isBack = false,
   }) {
+    if (context == null) {
+      // If context is null, return early to avoid issues
+      // debugPrint(
+      //     "Context is null. Unable to show the exit confirmation overlay.");
+      return;
+    }
+
     final overlay = Overlay.of(context);
+
+    if (overlay == null) {
+      // If the overlay is null, log a message and return
+      // debugPrint("Overlay is null. Unable to show the exit confirmation overlay.");
+      return;
+    }
 
     OverlayEntry? overlayEntry;
 
