@@ -100,7 +100,9 @@ class _StartScreenState extends State<StartScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GameScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => GameScreen(
+                            optionalContext: widget.optionalContext)),
                   );
                 },
               ),
@@ -194,22 +196,29 @@ class _StartScreenState extends State<StartScreen> {
 }
 
 class GameScreen extends StatelessWidget {
-  const GameScreen({super.key});
+  final BuildContext? optionalContext; // Optional parameter
+
+  const GameScreen({super.key, this.optionalContext});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        // Use optionalContext if provided; otherwise, use the current context
+        BuildContext targetContext = optionalContext ?? context;
+
         Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const StartScreen()),
+          targetContext,
+          MaterialPageRoute(
+              builder: (context) =>
+                  StartScreen(optionalContext: optionalContext)),
           (route) => false,
         );
         return false;
       },
       child: Scaffold(
         body: GameWidget(
-          game: SuperDashGame(),
+          game: SuperDashGame(optionalContext ?? context),
           overlayBuilderMap: {
             'GameOver': (BuildContext context, SuperDashGame game) {
               return GameOverOverlay(game: game);
