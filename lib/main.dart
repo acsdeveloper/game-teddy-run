@@ -12,92 +12,42 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('gameBox');
-  var isfromapp = true;
-  // Set the app to full-screen mode
-  // Lock the orientation to portrait mode
-  // await SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.landscapeRight,
-  //   DeviceOrientation.landscapeLeft,
-  // ]);
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  runApp(MyApp(isfromapp));
+  // Set the app to full-screen mode and lock the orientation to landscape
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+  ]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  // Example: Pass optional external data to the app
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  var fromapp;
-  MyApp(bool isfromapp, {super.key}) {
-    fromapp = isfromapp;
-  }
+class MyApp extends StatelessWidget {
+  final BuildContext? someData;
 
-  @override
-  State<MyApp> createState() => _MyAppState(fromapp);
-}
-
-class _MyAppState extends State<MyApp> {
-  var isfromapp;
-  _MyAppState(fromapp) {
-    fromapp = isfromapp;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    oninit(); // Call oninit here
-  }
-
-  Future<void> oninit() async {
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  }
+  const MyApp({this.someData, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StartScreen(isfromapp),
+      home: StartScreen(data: someData),
     );
   }
 }
 
-// ... (rest of your code, StartScreen and GameScreen remain the same)
-
 class StartScreen extends StatelessWidget {
-  var isapp;
-  StartScreen(isfromapp, {super.key}) {
-    isapp = isfromapp;
-  }
+  final BuildContext? data;
+
+  const StartScreen({this.data, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: const Icon(
-      //       Icons.exit_to_app_rounded,
-      //       color: textColor,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.popUntil(context, (route) => route.isFirst);
-      //     },
-      //   ),
-      //   iconTheme: const IconThemeData(
-      //     color: textColorWhite,
-      //   ),
-      //   backgroundColor: Colors.white,
-      // ),
       body: Container(
         color: Colors.white,
-        // decoration: BoxDecoration(
-        //   gradient: LinearGradient(
-        //     colors:Colors.white,
-        //     begin: Alignment.topCenter,
-        //     end: Alignment.bottomCenter,
-        //   ),
-        // ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -106,41 +56,29 @@ class StartScreen extends StatelessWidget {
                 'assets/images/screen/teddyicon.jpg',
                 width: 200,
               ),
+              if (data != null)
+                Text(
+                  'Data passed: $data',
+                  style: const TextStyle(fontSize: 20),
+                ),
               AppConstants.gradientContainer(
-                  text: "Start",
-                  icon: Icons.play_arrow,
+                text: "Start",
+                icon: Icons.play_arrow,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const GameScreen()),
+                  );
+                },
+              ),
+              if (data != null) // Show "Exit" button only if context is passed
+                AppConstants.gradientContainer(
+                  text: "Exit",
+                  icon: Icons.exit_to_app,
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const GameScreen()));
-                  }),
-              // Container(
-              //   height: 30,
-              // ),
-              // AppConstants.gradientContainer(
-              //     text: "Exit",
-              //     icon: Icons.exit_to_app,
-              //     onTap: () {
-              //       Navigator.pop(context);
-              //     })
-              // ButtonWidget(
-              //   text: "Start",
-              //   icon: Icons.play_arrow,
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => GameScreen()),
-              //     );
-              //   },
-              // ),
-              // SizedBox(height: 20),
-              // ButtonWidget(
-              //   text: "Exit Game",
-              //   onPressed: () {
-              //     SystemNavigator.pop();
-              //   },
-              // ),
+                    Navigator.pop(data!);
+                  },
+                ),
             ],
           ),
         ),
@@ -159,7 +97,7 @@ class GameScreen extends StatelessWidget {
       onPopInvoked: (didPop) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => StartScreen(true)),
+          MaterialPageRoute(builder: (context) => const StartScreen()),
           (route) => false,
         );
       },
@@ -174,7 +112,7 @@ class GameScreen extends StatelessWidget {
                 },
                 'Settings': (BuildContext context, SuperDashGame game) {
                   return Settings(game: game);
-                }
+                },
               },
             ),
           ],

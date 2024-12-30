@@ -103,7 +103,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
         pauseEngine();
         Navigator.pushAndRemoveUntil(
           buildContext!, // Pass the buildContext of the FlameGame
-          MaterialPageRoute(builder: (context) => StartScreen(true)),
+          MaterialPageRoute(builder: (context) => StartScreen()),
           (route) => false,
         );
       },
