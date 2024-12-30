@@ -11,6 +11,7 @@ import 'package:teddyrun/movingbackground.dart';
 import 'package:teddyrun/teady.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:teddyrun/settings/settings.dart';
+import 'constent/contaxt.dart';
 import 'obstacle.dart';
 import 'movingbackground.dart';
 import 'teady.dart';
@@ -18,7 +19,6 @@ import 'main.dart';
 
 class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late TeddyBear teddyBear;
-  late BuildContext optionalcontext;
   late Timer obstacleTimer;
   int score = 0;
   bool isGameOver = false;
@@ -34,10 +34,6 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     // Preload jump sound to prevent glitches
     await FlameAudio.audioCache.load("jump.mp3");
     await FlameAudio.audioCache.load("game.mp3");
-  }
-
-  SuperDashGame(BuildContext context) {
-    context = optionalcontext;
   }
 
   @override
@@ -106,6 +102,8 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
           FlameAudio.bgm.stop();
         }
         pauseEngine();
+        BuildContext? optionalcontext = ContextService().optionalContext;
+
         Navigator.pushAndRemoveUntil(
           buildContext!, // Pass the buildContext of the FlameGame
           MaterialPageRoute(

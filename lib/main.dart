@@ -8,19 +8,20 @@ import 'package:teddyrun/constent/button.dart';
 import 'package:teddyrun/game_over_widget.dart';
 import 'package:teddyrun/settings/settings.dart';
 import 'constent/buttoncontionser.dart';
+import 'constent/contaxt.dart';
 import 'super_dash_game.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('gameBox');
-  // runApp(MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final BuildContext optionalContext;
+  final BuildContext? optionalContext;
 
-  MyApp({required this.optionalContext, super.key}) {
+  MyApp({this.optionalContext, super.key}) {
     oninit();
   }
 
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.landscapeLeft,
     ]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    ContextService().setContext(optionalContext);
   }
 
   @override
@@ -42,9 +44,9 @@ class MyApp extends StatelessWidget {
 }
 
 class StartScreen extends StatefulWidget {
-  final BuildContext optionalContext;
+  final BuildContext? optionalContext;
 
-  const StartScreen({required this.optionalContext, super.key});
+  const StartScreen({this.optionalContext, super.key});
 
   @override
   State<StartScreen> createState() => _StartScreenState();
@@ -196,16 +198,16 @@ class _StartScreenState extends State<StartScreen> {
 }
 
 class GameScreen extends StatelessWidget {
-  final BuildContext optionalContext; // Optional parameter
+  final BuildContext? optionalContext; // Optional parameter
 
-  const GameScreen({super.key, required this.optionalContext});
+  const GameScreen({super.key, this.optionalContext});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         // Use optionalContext if provided; otherwise, use the current context
-        BuildContext targetContext = optionalContext;
+        BuildContext targetContext = optionalContext ?? context;
 
         Navigator.pushAndRemoveUntil(
           targetContext,
@@ -218,7 +220,7 @@ class GameScreen extends StatelessWidget {
       },
       child: Scaffold(
         body: GameWidget(
-          game: SuperDashGame(optionalContext),
+          game: SuperDashGame(),
           overlayBuilderMap: {
             'GameOver': (BuildContext context, SuperDashGame game) {
               return GameOverOverlay(game: game);
