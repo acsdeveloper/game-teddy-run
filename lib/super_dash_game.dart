@@ -6,16 +6,13 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:teddyrun/background.dart';
 import 'package:teddyrun/movingbackground.dart';
 import 'package:teddyrun/teady.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
-import 'package:teddyrun/settings/settings.dart';
 import 'constent/contaxt.dart';
 import 'obstacle.dart';
-import 'movingbackground.dart';
-import 'teady.dart';
 import 'main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late TeddyBear teddyBear;
@@ -38,6 +35,10 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
 
   @override
   Future<void> onLoad() async {
+    BuildContext? optionalcontext = ContextService().optionalContext;
+
+    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
+
     await super.onLoad();
 
     // **Load Preferences and Set Initial Values**
@@ -71,7 +72,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     );
     highScoreText = TextComponent(
       anchor: Anchor.topLeft,
-      text: 'Best Score :${formatScore(highScore)}',
+      text: '${localizations.bestScore}:${formatScore(highScore)}',
       position: Vector2(size.x - 180, 15),
       textRenderer: highScoreStyle,
     );
@@ -86,7 +87,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       ),
     );
     scoreText = TextComponent(
-      text: 'Score: 0',
+      text: '${localizations.score}: 0',
       position: Vector2(size.x - 180, 35),
       textRenderer: scoreStyle,
     );
@@ -102,7 +103,6 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
           FlameAudio.bgm.stop();
         }
         pauseEngine();
-        BuildContext? optionalcontext = ContextService().optionalContext;
 
         Navigator.pushAndRemoveUntil(
           buildContext!, // Pass the buildContext of the FlameGame
@@ -199,16 +199,20 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   @override
   void update(double dt) async {
     super.update(dt);
+    BuildContext? optionalcontext = ContextService().optionalContext;
+
+    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
 
     if (!isGameOver) {
       obstacleTimer.update(dt);
 
       // Update score over time
       score += (dt * 90).toInt();
-      scoreText.text = 'Score: ${formatScore(score)}';
+      scoreText.text = '${localizations.score}: ${formatScore(score)}';
       if (score > highScore) {
         highScore = score;
-        highScoreText.text = "Best Score: ${formatScore(score)}";
+        highScoreText.text =
+            "${localizations.bestScore}: ${formatScore(score)}";
         await _saveHighScore(score);
       }
     }
@@ -225,6 +229,10 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   }
 
   void gameOver() async {
+    BuildContext? optionalcontext = ContextService().optionalContext;
+
+    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
+
     if (isGameOver) return; // Ensure gameOver logic is triggered only once
 
     isGameOver = true;
@@ -239,11 +247,12 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     if (score > highScore) {
       highScore = score;
       await _saveHighScore(highScore);
-      highScoreText.text = 'Best Score: ${formatScore(highScore)}';
+      highScoreText.text =
+          '${localizations.bestScore}: ${formatScore(highScore)}';
     }
 
     final gameOverText = TextComponent(
-      text: 'Game Over!',
+      text: localizations.gameOver,
       position: Vector2(size.x / 2, size.y / 2),
       anchor: Anchor.center,
       textRenderer: TextPaint(
@@ -259,12 +268,20 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
 
   @override
   void onTapDown(TapDownEvent event) {
+    BuildContext? optionalcontext = ContextService().optionalContext;
+
+    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
+
     if (isGameOver) return; // Ignore taps if the game is over
 
     teddyBear.jump();
   }
 
   void resetGame() async {
+    BuildContext? optionalcontext = ContextService().optionalContext;
+
+    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
+
     children
         .whereType<Obstacle>()
         .forEach((obstacle) => obstacle.removeFromParent());
@@ -274,7 +291,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     isGameOver = false;
 
     score = 0;
-    scoreText.text = 'Score: ${formatScore(score)}';
+    scoreText.text = '${localizations.score}: ${formatScore(score)}';
 
     obstacleTimer.start();
     resumeEngine();

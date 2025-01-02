@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teddyrun/super_dash_game.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Settings extends StatefulWidget {
   final SuperDashGame game;
@@ -55,6 +56,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context!)!; // Now defined
+
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0), // Remove default padding
       content: Stack(
@@ -66,7 +69,7 @@ class _SettingsState extends State<Settings> {
               children: [
                 // Title
                 Text(
-                  "Settings",
+                  localizations.settings,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 20,

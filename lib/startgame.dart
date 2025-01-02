@@ -3,7 +3,7 @@
 import 'package:flame/timer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'super_dash_game.dart';
 
 class StartGameOverlay extends StatelessWidget {
@@ -14,12 +14,14 @@ class StartGameOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context!)!; // Now defined
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Start",
+            localizations.start,
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w500,
@@ -44,7 +46,7 @@ class StartGameOverlay extends StatelessWidget {
             },
             icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
             label: Text(
-              "Start",
+              localizations.start,
               style: TextStyle(
                 color: Colors.white,
                 // fontFamily: GoogleFonts.montserrat().fontFamily,
