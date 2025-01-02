@@ -6,7 +6,6 @@ import 'package:teddyrun/constent/buttoncontionser.dart';
 import 'package:teddyrun/constent/stringconst.dart';
 import 'constent/traslutation.dart';
 import 'super_dash_game.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameOverOverlay extends StatefulWidget {
   final SuperDashGame game;
@@ -51,7 +50,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
           Text(
             LocaleStrings.getString(
                 'gameOver', Localizations.localeOf(context)),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w500,
               color: Colors.red,
