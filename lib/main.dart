@@ -9,15 +9,30 @@ import 'package:teddyrun/game_over_widget.dart';
 import 'package:teddyrun/settings/settings.dart';
 import 'constent/buttoncontionser.dart';
 import 'constent/contaxt.dart';
+import 'constent/traslutation.dart';
 import 'super_dash_game.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('gameBox');
-  runApp(MyApp());
+  runApp(Test());
+}
+
+class Test extends StatefulWidget {
+  @override
+  _TestState createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  @override
+  Widget build(BuildContext context) {
+    ContextService().setContext(context);
+    return MyApp(
+      optionalContext: context,
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +48,6 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.landscapeLeft,
     ]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    ContextService().setContext(optionalContext);
   }
 
   @override
@@ -45,7 +59,6 @@ class MyApp extends StatelessWidget {
         // ... other locales your app supports
       ],
       localizationsDelegates: [
-        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -76,8 +89,6 @@ class _StartScreenState extends State<StartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!; // Now defined
-
     return Scaffold(
       appBar: AppBar(
         leading: widget.optionalContext != null
@@ -89,7 +100,8 @@ class _StartScreenState extends State<StartScreen> {
                 onPressed: () {
                   showExitConfirmationOverlay(
                     widget.optionalContext,
-                    localizations.exitmessage,
+                    LocaleStrings.getString(
+                        'exitmessage', Localizations.localeOf(context)),
                     // "Do you really want to exit the game?",
                     isBack: true,
                   );
@@ -113,7 +125,8 @@ class _StartScreenState extends State<StartScreen> {
               ),
               const SizedBox(height: 50),
               AppConstants.gradientContainer(
-                text: localizations.start,
+                text: LocaleStrings.getString(
+                    'start', Localizations.localeOf(context)),
                 icon: Icons.play_arrow,
                 onTap: () {
                   Navigator.push(
@@ -139,8 +152,6 @@ class _StartScreenState extends State<StartScreen> {
     String text, {
     bool isBack = false,
   }) {
-    final localizations = AppLocalizations.of(context!)!; // Now defined
-
     if (context == null) {
       // If context is null, return early to avoid issues
       // debugPrint(
@@ -190,7 +201,8 @@ class _StartScreenState extends State<StartScreen> {
                       onPressed: () {
                         overlayEntry?.remove();
                       },
-                      text: localizations.no,
+                      text: LocaleStrings.getString(
+                          'no', Localizations.localeOf(context)),
                     ),
                     const SizedBox(width: 25.0),
                     ButtonWidget(
@@ -200,7 +212,8 @@ class _StartScreenState extends State<StartScreen> {
                           Navigator.of(context).pop();
                         }
                       },
-                      text: localizations.yes,
+                      text: LocaleStrings.getString(
+                          'yes', Localizations.localeOf(context)),
                     ),
                   ],
                 ),

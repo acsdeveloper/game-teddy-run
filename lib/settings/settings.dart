@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teddyrun/super_dash_game.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../constent/traslutation.dart';
+
 class Settings extends StatefulWidget {
   final SuperDashGame game;
 
@@ -56,8 +58,6 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context!)!; // Now defined
-
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0), // Remove default padding
       content: Stack(
@@ -69,7 +69,8 @@ class _SettingsState extends State<Settings> {
               children: [
                 // Title
                 Text(
-                  localizations.settings,
+                  LocaleStrings.getString(
+                      'settings', Localizations.localeOf(context)),
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
