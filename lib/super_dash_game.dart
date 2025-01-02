@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPre
 import 'constent/contaxt.dart';
 import 'obstacle.dart';
 import 'main.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   late TeddyBear teddyBear;
@@ -231,8 +230,6 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   void gameOver() async {
     BuildContext? optionalcontext = ContextService().optionalContext;
 
-    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
-
     if (isGameOver) return; // Ensure gameOver logic is triggered only once
 
     isGameOver = true;
@@ -248,11 +245,12 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       highScore = score;
       await _saveHighScore(highScore);
       highScoreText.text =
-          '${localizations.bestScore}: ${formatScore(highScore)}';
+          ' ${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))} : ${formatScore(highScore)}';
     }
 
     final gameOverText = TextComponent(
-      text: localizations.gameOver,
+      text:
+          ' ${LocaleStrings.getString('gameOver', Localizations.localeOf(optionalcontext!))}',
       position: Vector2(size.x / 2, size.y / 2),
       anchor: Anchor.center,
       textRenderer: TextPaint(
@@ -278,8 +276,6 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   void resetGame() async {
     BuildContext? optionalcontext = ContextService().optionalContext;
 
-    final localizations = AppLocalizations.of(optionalcontext!)!; // Now defined
-
     children
         .whereType<Obstacle>()
         .forEach((obstacle) => obstacle.removeFromParent());
@@ -289,7 +285,8 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     isGameOver = false;
 
     score = 0;
-    scoreText.text = '${localizations.score}: ${formatScore(score)}';
+    scoreText.text =
+        '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
 
     obstacleTimer.start();
     resumeEngine();

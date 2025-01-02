@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teddyrun/super_dash_game.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../constent/traslutation.dart';
 
 class Settings extends StatefulWidget {

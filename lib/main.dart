@@ -28,7 +28,6 @@ class Test extends StatefulWidget {
 class _TestState extends State<Test> {
   @override
   Widget build(BuildContext context) {
-    ContextService().setContext(context);
     return MyApp(
       optionalContext: context,
     );
@@ -48,17 +47,18 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.landscapeLeft,
     ]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    ContextService().setContext(optionalContext);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en'), // English
         Locale('es'), // Spanish
         // ... other locales your app supports
       ],
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
