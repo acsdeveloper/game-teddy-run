@@ -1,0 +1,19 @@
+{
+  "score": "Score: ",
+  "bestScore": "Best Score: ",
+  "gameOver": "Game Over!",
+  "musicOn": "Music On",
+  "musicOff": "Music Off",
+  "pause": "Pause",
+  "play": "Play",
+  "exitmessage": "Do you really want to exit the game",
+  "start": "Start",
+  "exit": "Exit",
+  "yes": "Yes",
+  "no": "No",
+  "resume": "Resume",
+  "restart": "Restart",
+  "settings": "Settings",
+   "tryAgain": "Try Again"
+
+  }

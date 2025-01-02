@@ -44,7 +44,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   flame: ^1.22.0
-  shared_preferences: ^2.0.13
+  shared_preferences: null
   hive: ^2.0.0
   hive_flutter: ^1.1.0
   icons_launcher: ^3.0.0
@@ -52,7 +52,7 @@ dependencies:
   google_fonts: ^6.2.1
   vibration: 2.0.1
   flame_audio: null
-  
+  flutter_localization: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -64,12 +64,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  intl_utils: ^2.8.5  # Or latest version - used for generating arb files
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
