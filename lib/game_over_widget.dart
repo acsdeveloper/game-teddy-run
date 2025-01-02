@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teddyrun/constent/buttoncontionser.dart';
 import 'package:teddyrun/constent/stringconst.dart';
 import 'super_dash_game.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameOverOverlay extends StatefulWidget {
   final SuperDashGame game;
@@ -43,14 +42,12 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context!)!; // Now defined
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            localizations.gameOver,
+            StringConstants.gameOverOverlayKey,
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w500,
@@ -60,7 +57,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
           const SizedBox(height: 20),
           AppConstants.gradientContainer(
             icon: Icons.refresh,
-            text: localizations.tryAgain,
+            text: StringConstants.tryAgain,
             onTap: () {
               // _playBackgroundMusic(); // Play music based on the preference
               widget.game.ispaused = true;

@@ -10,8 +10,6 @@ import 'package:teddyrun/settings/settings.dart';
 import 'constent/buttoncontionser.dart';
 import 'constent/contaxt.dart';
 import 'super_dash_game.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,17 +37,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      supportedLocales: [
-        Locale('en'), // English
-        Locale('es'), // Spanish
-        // ... other locales your app supports
-      ],
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
       debugShowCheckedModeBanner: false,
       home: StartScreen(optionalContext: optionalContext),
     );
@@ -76,8 +63,6 @@ class _StartScreenState extends State<StartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!; // Now defined
-
     return Scaffold(
       appBar: AppBar(
         leading: widget.optionalContext != null
@@ -89,8 +74,7 @@ class _StartScreenState extends State<StartScreen> {
                 onPressed: () {
                   showExitConfirmationOverlay(
                     widget.optionalContext,
-                    localizations.exitmessage,
-                    // "Do you really want to exit the game?",
+                    "Do you really want to exit the game?",
                     isBack: true,
                   );
                 },
@@ -113,7 +97,7 @@ class _StartScreenState extends State<StartScreen> {
               ),
               const SizedBox(height: 50),
               AppConstants.gradientContainer(
-                text: localizations.start,
+                text: "Start",
                 icon: Icons.play_arrow,
                 onTap: () {
                   Navigator.push(
@@ -139,8 +123,6 @@ class _StartScreenState extends State<StartScreen> {
     String text, {
     bool isBack = false,
   }) {
-    final localizations = AppLocalizations.of(context!)!; // Now defined
-
     if (context == null) {
       // If context is null, return early to avoid issues
       // debugPrint(
@@ -190,7 +172,7 @@ class _StartScreenState extends State<StartScreen> {
                       onPressed: () {
                         overlayEntry?.remove();
                       },
-                      text: localizations.no,
+                      text: "No",
                     ),
                     const SizedBox(width: 25.0),
                     ButtonWidget(
@@ -200,7 +182,7 @@ class _StartScreenState extends State<StartScreen> {
                           Navigator.of(context).pop();
                         }
                       },
-                      text: localizations.yes,
+                      text: "Yes",
                     ),
                   ],
                 ),
