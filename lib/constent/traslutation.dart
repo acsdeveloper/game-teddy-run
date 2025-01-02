@@ -27,23 +27,23 @@ class LocaleStrings {
       "tryAgain": "Try Again"
     },
     "fr": {
-      "score": "Score : ",
-      "bestScore": "Meilleur Score : ",
-      "gameOver": "Fin de partie !",
+      "score": "Score : ",
+      "bestScore": "Meilleur score : ",
+      "gameOver": "Jeu terminé !",
       "musicOn": "Musique activée",
       "musicOff": "Musique désactivée",
       "pause": "Pause",
       "play": "Jouer",
-      "exitmessage": "Voulez-vous vraiment quitter le jeu ?",
+      "exitmessage": "Voulez-vous vraiment quitter le jeu",
       "start": "Démarrer",
       "exit": "Quitter",
       "yes": "Oui",
       "no": "Non",
       "resume": "Reprendre",
-      "restart": "Recommencer",
+      "restart": "Redémarrer",
       "settings": "Paramètres",
       "tryAgain": "Réessayer"
-    },
+    }
   };
 
   // Method to get the localized string for a given key
