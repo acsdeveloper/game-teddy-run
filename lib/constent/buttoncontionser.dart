@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:teddyrun/constent/Colors.dart';
 import 'package:teddyrun/constent/button.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:teddyrun/constent/traslutation.dart';
 
 class AppConstants {
   static gradientContainer({
@@ -155,7 +157,8 @@ class AppConstants {
                                   yesButtonAction();
                                 }
                               },
-                              text: yesButtonText,
+                              text: LocaleStrings.getString(
+                                  'yes', Localizations.localeOf(context)),
                             ),
                             const SizedBox(width: 25.0),
                             ButtonWidget(
@@ -164,7 +167,8 @@ class AppConstants {
                                   noButtonAction();
                                 }
                               },
-                              text: noButtonText,
+                              text: LocaleStrings.getString(
+                                  'no', Localizations.localeOf(context)),
                             ),
                           ],
                         ),
