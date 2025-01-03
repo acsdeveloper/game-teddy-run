@@ -121,7 +121,7 @@ class _StartScreenState extends State<StartScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/screen/teddyiconfr.jpg',
+                'assets/images/screen/teddyicon.jpg',
                 width: 200,
               ),
               const SizedBox(height: 50),
