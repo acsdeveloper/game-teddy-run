@@ -6,7 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:teddyrun/constent/traslutation.dart';
+import 'package:teddyrun/constent/translation.dart';
 import 'package:teddyrun/movingbackground.dart';
 import 'package:teddyrun/teady.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences

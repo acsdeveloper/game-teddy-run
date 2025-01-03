@@ -9,8 +9,8 @@ class LocaleStrings {
   // Define your localized strings
   static Map<String, Map<String, String>> _localizedStrings = {
     "en": {
-      "score": "Score: ",
-      "bestScore": "Best Score: ",
+      "score": "Score",
+      "bestScore": "Meilleure Score ",
       "gameOver": "Game Over!",
       "musicOn": "Music On",
       "musicOff": "Music Off",

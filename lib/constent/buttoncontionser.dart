@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teddyrun/constent/Colors.dart';
 import 'package:teddyrun/constent/button.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:teddyrun/constent/traslutation.dart';
+import 'package:teddyrun/constent/translation.dart';
 
 class AppConstants {
   static gradientContainer({
