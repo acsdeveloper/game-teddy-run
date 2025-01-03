@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
         Locale('fr'), // fr
         // ... other locales your app supports
       ],
+      locale: Locale('fr', ''),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -120,7 +121,7 @@ class _StartScreenState extends State<StartScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/screen/teddyicon.jpg',
+                'assets/images/screen/teddyiconfr.jpg',
                 width: 200,
               ),
               const SizedBox(height: 50),

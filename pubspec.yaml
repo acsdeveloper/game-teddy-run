@@ -29,7 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 
 icons_launcher:
-  image_path: 'assets/image/screen/teddyicon.jpg'
+  image_path: 'assets/images/screen/teddyiconfr.jpg'
   platforms:
     android:
       enable: true
