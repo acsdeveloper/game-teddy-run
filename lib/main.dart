@@ -9,7 +9,7 @@ import 'package:teddyrun/game_over_widget.dart';
 import 'package:teddyrun/settings/settings.dart';
 import 'constent/buttoncontionser.dart';
 import 'constent/contaxt.dart';
-import 'constent/traslutation.dart';
+import 'constent/translation.dart';
 import 'super_dash_game.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teddyrun/constent/buttoncontionser.dart';
 import 'package:teddyrun/constent/stringconst.dart';
-import 'constent/traslutation.dart';
+import 'constent/translation.dart';
 import 'super_dash_game.dart';
 
 class GameOverOverlay extends StatefulWidget {
