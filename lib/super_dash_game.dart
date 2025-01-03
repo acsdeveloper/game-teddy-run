@@ -72,7 +72,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       anchor: Anchor.topLeft,
       text:
           '${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}:${formatScore(highScore)}',
-      position: Vector2(size.x - 150, 15),
+      position: Vector2(size.x - 200, 15),
       textRenderer: highScoreStyle,
     );
 
@@ -88,7 +88,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     scoreText = TextComponent(
       text:
           '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: 0',
-      position: Vector2(size.x - 150, 35),
+      position: Vector2(size.x - 200, 35),
       textRenderer: scoreStyle,
     );
 
