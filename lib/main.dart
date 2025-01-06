@@ -240,14 +240,21 @@ class GameScreen extends StatelessWidget {
       onWillPop: () async {
         // Use optionalContext if provided; otherwise, use the current context
         BuildContext targetContext = optionalContext ?? context;
-
-        Navigator.pushAndRemoveUntil(
-          targetContext,
-          MaterialPageRoute(
-              builder: (context) =>
-                  StartScreen(optionalContext: targetContext)),
-          (route) => false,
+        this.showExitConfirmationOverlay(
+          context,
+          LocaleStrings.getString(
+              'exitmessage', Localizations.localeOf(context)),
+          // "Do you really want to exit the game?",
+          isBack: true,
         );
+
+        // Navigator.pushAndRemoveUntil(
+        //   targetContext,
+        //   MaterialPageRoute(
+        //       builder: (context) =>
+        //           StartScreen(optionalContext: targetContext)),
+        //   (route) => false,
+        // );
         return false;
       },
       child: Scaffold(
@@ -264,5 +271,85 @@ class GameScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showExitConfirmationOverlay(
+    BuildContext? context, // Make context optional
+    String text, {
+    bool isBack = false,
+  }) {
+    if (context == null) {
+      // If context is null, return early to avoid issues
+      // debugPrint(
+      //     "Context is null. Unable to show the exit confirmation overlay.");
+      return;
+    }
+
+    final overlay = Overlay.of(context);
+
+    if (overlay == null) {
+      // If the overlay is null, log a message and return
+      // debugPrint("Overlay is null. Unable to show the exit confirmation overlay.");
+      return;
+    }
+
+    OverlayEntry? overlayEntry;
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: Material(
+          color: overlayColor.withOpacity(0.9),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16.0),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.90,
+                  ),
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      color: textColor,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ButtonWidget(
+                      onPressed: () {
+                        overlayEntry?.remove();
+                      },
+                      text: LocaleStrings.getString(
+                          'no', Localizations.localeOf(context)),
+                    ),
+                    const SizedBox(width: 25.0),
+                    ButtonWidget(
+                      onPressed: () {
+                        overlayEntry?.remove();
+                        if (isBack) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      text: LocaleStrings.getString(
+                          'yes', Localizations.localeOf(context)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(overlayEntry);
   }
 }
