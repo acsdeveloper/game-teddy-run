@@ -238,16 +238,6 @@ class GameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // Use optionalContext if provided; otherwise, use the current context
-        BuildContext targetContext = optionalContext ?? context;
-
-        Navigator.pushAndRemoveUntil(
-          targetContext,
-          MaterialPageRoute(
-              builder: (context) =>
-                  StartScreen(optionalContext: targetContext)),
-          (route) => false,
-        );
         return false;
       },
       child: Scaffold(
