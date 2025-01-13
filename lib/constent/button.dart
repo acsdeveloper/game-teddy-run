@@ -10,7 +10,7 @@ class ButtonWidget extends ConsumerWidget {
     this.icon,
     required this.onPressed,
     this.useFixedSize =
-        false, // Flag to toggle between fixed and adaptive sizing
+        true, // Flag to toggle between fixed and adaptive sizing
   });
 
   final String? text;
