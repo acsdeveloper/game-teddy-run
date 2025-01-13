@@ -1,117 +1,189 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:teddyrun/constent/Colors.dart';
 
-class ButtonWidget extends StatelessWidget {
-  final String? text;
-  final IconData? icon;
-  final VoidCallback onPressed;
-  final bool restrictWidth;
-
+class ButtonWidget extends ConsumerWidget {
   const ButtonWidget({
+    super.key,
     this.text,
     this.icon,
     required this.onPressed,
-    this.restrictWidth = false,
+    this.useFixedSize =
+        false, // Flag to toggle between fixed and adaptive sizing
   });
 
-  Color _lighten(Color color, [double amount = 0.1]) {
+  final String? text;
+  final IconData? icon;
+  final VoidCallback onPressed;
+  final bool useFixedSize;
+
+  static lighten(Color color, [double amount = 0.1]) {
     final hsl = HSLColor.fromColor(color);
     final lightness = (hsl.lightness + amount).clamp(0.0, 1.0);
     return hsl.withLightness(lightness).toColor();
   }
 
-  Color _darken(Color color, [double amount = 0.1]) {
+  static darken(Color color, [double amount = 0.1]) {
     final hsl = HSLColor.fromColor(color);
     final lightness = (hsl.lightness - amount).clamp(0.0, 1.0);
     return hsl.withLightness(lightness).toColor();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            _lighten(scoreColor),
-            scoreColor,
-            _darken(scoreColor),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Size size = MediaQuery.of(context).size;
+
+    // Icon-only button (common logic for both fixed and adaptive)
+    if (text == null) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              lighten(buttonColor),
+              buttonColor,
+              darken(buttonColor),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.3),
+              offset: const Offset(-1, -1),
+              blurRadius: 1,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              offset: const Offset(2, 2),
+              blurRadius: 4,
+            ),
           ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.3),
-            offset: const Offset(-1, -1),
-            blurRadius: 1,
+        child: IconButton(
+          color: textColorWhite,
+          onPressed: onPressed,
+          icon: Icon(
+            icon,
+            size: 24.0,
           ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            offset: const Offset(2, 2),
-            blurRadius: 4,
+        ),
+      );
+    }
+
+    // Button with text and optional icon
+    final buttonContent = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (icon != null)
+          Icon(
+            icon,
+            size: 24.0,
+            color: textColorWhite,
           ),
-        ],
-      ),
-      child: icon != null
-          ? IconButton(
-              color: textColorWhite,
-              onPressed: onPressed,
-              icon: Icon(
-                icon,
-                size: 50.0,
+        if (icon != null)
+          const SizedBox(
+            width: 8,
+          ),
+        Text(
+          text!,
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+            color: textColorWhite,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: const Offset(1, 1),
+                blurRadius: 2,
               ),
-            )
-          : Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: onPressed,
-                borderRadius: BorderRadius.circular(8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: restrictWidth
-                      ? Wrap(
-                          alignment: WrapAlignment.center,
-                          children: [
-                            Text(
-                              text ?? '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                                color: textColorWhite,
-                                fontFamily: 'Montserrat',
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    offset: const Offset(1, 1),
-                                    blurRadius: 2,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Center(
-                          child: Text(
-                            text ?? '',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                              color: textColorWhite,
-                              fontFamily: 'Montserrat',
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  offset: const Offset(1, 1),
-                                  blurRadius: 2,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                ),
-              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (useFixedSize) {
+      // Fixed-size button (first implementation logic)
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              lighten(buttonColor),
+              buttonColor,
+              darken(buttonColor),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.3),
+              offset: const Offset(-1, -1),
+              blurRadius: 1,
             ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              offset: const Offset(2, 2),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        width: size.width * 0.3,
+        height: size.height * 0.05,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onPressed,
+            borderRadius: BorderRadius.circular(8.0),
+            child: buttonContent,
+          ),
+        ),
+      );
+    }
+
+    // Adaptive-size button (second implementation logic)
+    return IntrinsicWidth(
+      child: IntrinsicHeight(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                lighten(buttonColor),
+                buttonColor,
+                darken(buttonColor),
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.3),
+                offset: const Offset(-1, -1),
+                blurRadius: 1,
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(2, 2),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onPressed,
+              borderRadius: BorderRadius.circular(8.0),
+              child: buttonContent,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         Locale('fr'), // fr
         // ... other locales your app supports
       ],
-      locale: Locale('fr', ''),
+      locale: const Locale('fr', ''),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -90,58 +90,61 @@ class _StartScreenState extends State<StartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: widget.optionalContext != null
-            ? IconButton(
-                icon: Icon(
-                  Icons.exit_to_app_rounded,
-                  color: textColor,
-                ),
-                onPressed: () {
-                  showExitConfirmationOverlay(
-                    widget.optionalContext,
-                    LocaleStrings.getString(
-                        'exitmessage', Localizations.localeOf(context)),
-                    // "Do you really want to exit the game?",
-                    isBack: true,
-                  );
-                },
-              )
-            : null,
-        iconTheme: IconThemeData(
-          color: textColorWhite,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: widget.optionalContext != null
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.exit_to_app_rounded,
+                    color: textColor,
+                  ),
+                  onPressed: () {
+                    showExitConfirmationOverlay(
+                      widget.optionalContext,
+                      LocaleStrings.getString(
+                          'exitmessage', Localizations.localeOf(context)),
+                      // "Do you really want to exit the game?",
+                      isBack: true,
+                    );
+                  },
+                )
+              : null,
+          iconTheme: const IconThemeData(
+            color: textColorWhite,
+          ),
+          backgroundColor: Colors.white,
         ),
-        backgroundColor: Colors.white,
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/screen/teddyiconfr.jpg',
-                width: 200,
-              ),
-              const SizedBox(height: 50),
-              AppConstants.gradientContainer(
-                text: LocaleStrings.getString(
-                    'start', Localizations.localeOf(context)),
-                icon: Icons.play_arrow,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GameScreen(
-                            optionalContext: widget.optionalContext)),
-                  );
-                },
-              ),
-              Container(
-                height: 30,
-              ),
-            ],
+        body: Container(
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/screen/teddyiconfr.jpg',
+                  width: 200,
+                ),
+                const SizedBox(height: 50),
+                AppConstants.gradientContainer(
+                  text: LocaleStrings.getString(
+                      'start', Localizations.localeOf(context)),
+                  icon: Icons.play_arrow,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GameScreen(
+                              optionalContext: widget.optionalContext)),
+                    );
+                  },
+                ),
+                Container(
+                  height: 30,
+                ),
+              ],
+            ),
           ),
         ),
       ),

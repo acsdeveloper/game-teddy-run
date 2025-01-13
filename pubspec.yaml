@@ -53,6 +53,7 @@ dependencies:
   vibration: 2.0.1
   flame_audio: null
   flutter_localization: ^0.3.0
+  flutter_riverpod: ^2.6.1
 
 dev_dependencies:
   flutter_test:
