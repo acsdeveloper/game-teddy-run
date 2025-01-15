@@ -132,7 +132,7 @@ class ButtonWidget extends ConsumerWidget {
             ),
           ],
         ),
-        width: size.width * 0.5,
+        width: size.width * 0.2,
         // height: size.height * 0.05,
         child: Material(
           color: Colors.transparent,
