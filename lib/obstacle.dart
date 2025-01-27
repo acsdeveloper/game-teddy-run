@@ -18,11 +18,19 @@ class Obstacle extends SpriteComponent
     // Load the sprite image for the obstacle
     sprite = await gameRef.loadSprite(Assets.treeImage);
 
+if(gameRef.score>2000)
+{
     // Set initial position off-screen to the right, so it moves into view
     position = Vector2(
         gameRef.size.x + size.x + Random().nextDouble() * gameRef.size.x,
         gameRef.groundY);
-
+}          
+else
+{
+   position = Vector2(
+        gameRef.size.x + size.x  * gameRef.size.x,
+        gameRef.groundY);
+}
     // Add a hitbox that matches the obstacle's image size
     add(RectangleHitbox.relative(Vector2(0.6, 0.6), parentSize: size));
 
