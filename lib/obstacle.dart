@@ -10,10 +10,6 @@ class Obstacle extends SpriteComponent
     with HasGameRef<SuperDashGame>, CollisionCallbacks {
   double baseSpeed = 400; // Base speed of the obstacle
   double speedMultiplier = 1.0; // Multiplier for increasing speed
-  static const double baseSpawnCooldown = 2.5; // Base spawn cooldown in seconds
-  double spawnCooldown = baseSpawnCooldown; // Current cooldown time
-  double timeSinceLastSpawn = 0; // Time since the last obstacle was spawned
-
 
   Obstacle() : super(size: Vector2(100, 100), anchor: Anchor.bottomRight);
 
@@ -40,7 +36,6 @@ class Obstacle extends SpriteComponent
     // Increase speed multiplier every 1500 points
     if (gameRef.score % 1500 == 0 && gameRef.score != 0) {
       speedMultiplier = 1.0 + (gameRef.score ~/ 1500) * 0.1; // Increase by 10% for every 1500 points
-      spawnCooldown = baseSpawnCooldown / (1.0 + (gameRef.score ~/ 1500) * 0.1); // Reduce cooldown
     }
 
     // Calculate the current speed
@@ -49,14 +44,9 @@ class Obstacle extends SpriteComponent
     // Update obstacle position with the new speed
     position.x -= speed * dt;
 
-    // Track the time since the last obstacle spawn
-    timeSinceLastSpawn += dt;
-
-    // If the obstacle moves off-screen and cooldown is satisfied, spawn a new obstacle
-    if (position.x < -size.x && timeSinceLastSpawn >= spawnCooldown) {
-      timeSinceLastSpawn = 0; // Reset the spawn timer
+    // Remove obstacle when off-screen
+    if (position.x < -size.x) {
+      removeFromParent();
     }
   }
-
-  // Method to generate a random height between 100 and 150
 }
