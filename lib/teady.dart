@@ -112,18 +112,18 @@ class TeddyBear extends SpriteAnimationComponent
   }
 
   // Method to trigger the jump with vertical motion only
-  void jump() {
-    if (!isJumping && !isColliding) {
-      // Prevent jumping while colliding
-      isJumping = true;
-      animation = jumpAnimation;
-      time = 0;
+void jump() {
+  if (!isJumping && !isColliding) {
+    isJumping = true;
+    animation = jumpAnimation;
+    time = 0;
 
-      // Set initial vertical velocity
-      velocityY = initialVelocityY;
-    }
-    // FlameAudio.play("jump.mp3");
+    // Set initial vertical velocity dynamically based on obstacle speed
+    double obstacleSpeed = gameRef.baseObstacleSpeed * gameRef.speedMultiplier;
+    velocityY = obstacleSpeed * 1.2; // Adjust multiplier as needed for jump height
   }
+}
+
 
   // Override update to simulate vertical jump motion and handle collision animation
   @override

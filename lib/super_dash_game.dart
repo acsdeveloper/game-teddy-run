@@ -27,6 +27,10 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   double groundY = 0; // Will be set dynamically in onLoad
   bool ispaused = true;
   late SpriteButtonComponent playpauseButton;
+    double baseObstacleSpeed = 200; // Default speed of obstacles
+
+  double speedMultiplier = 1.0; // Default multiplier
+
   Future<void> preloadAudio() async {
     // Preload jump sound to prevent glitches
     await FlameAudio.audioCache.load("jump.mp3");

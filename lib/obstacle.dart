@@ -30,23 +30,19 @@ class Obstacle extends SpriteComponent
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
+void update(double dt) {
+  super.update(dt);
 
-    // Increase speed multiplier every 1500 points
-    if (gameRef.score % 1500 == 0 && gameRef.score != 0) {
-      speedMultiplier = 1.0 + (gameRef.score ~/ 1500) * 0.1; // Increase by 10% for every 1500 points
-    }
+  // Dynamically calculate the current speed
+  double speed = baseSpeed * speedMultiplier;
 
-    // Calculate the current speed
-    double speed = baseSpeed * speedMultiplier;
+  // Update position with the calculated speed
+  position.x -= speed * dt;
 
-    // Update obstacle position with the new speed
-    position.x -= speed * dt;
-
-    // Remove obstacle when off-screen
-    if (position.x < -size.x) {
-      removeFromParent();
-    }
+  // Check if obstacle is off-screen and remove it
+  if (position.x < -size.x) {
+    removeFromParent();
   }
+}
+
 }
