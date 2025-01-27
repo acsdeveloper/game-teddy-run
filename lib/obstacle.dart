@@ -42,7 +42,7 @@ class Obstacle extends SpriteComponent
     double speed = baseSpeed * speedMultiplier;
 
     // Update obstacle position with the new speed
-    position.x -= speed *0.1* dt;
+    position.x -= speed * dt;
 
     // Remove obstacle when off-screen
     if (position.x < -size.x) {
