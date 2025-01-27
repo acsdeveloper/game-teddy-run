@@ -95,8 +95,38 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       position: Vector2(size.x - 200, 35),
       textRenderer: scoreStyle,
     );
-
+    if(score<2000)
+    {
     obstacleTimer = Timer(3, onTick: spawnObstacle, repeat: true);
+    }
+    else if(score<4000){
+          obstacleTimer = Timer(2.5, onTick: spawnObstacle, repeat: true);
+
+    }
+     else if(score<6000){
+          obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
+
+    }
+    else if(score<10000)
+    {
+          obstacleTimer = Timer(1.75, onTick: spawnObstacle, repeat: true);
+
+    }
+      else if(score<15000)
+    {
+          obstacleTimer = Timer(1.5, onTick: spawnObstacle, repeat: true);
+
+    }
+      else if(score<19000)
+    {
+          obstacleTimer = Timer(1.25, onTick: spawnObstacle, repeat: true);
+
+    }
+    else
+    {
+                obstacleTimer = Timer(1, onTick: spawnObstacle, repeat: true);
+
+    }
 
     final backButton = SpriteButtonComponent(
       button: await Sprite.load("screen/back.png"),
