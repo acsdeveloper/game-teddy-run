@@ -14,6 +14,7 @@ class Obstacle extends SpriteComponent
   double spawnCooldown = baseSpawnCooldown; // Current cooldown time
   double timeSinceLastSpawn = 0; // Time since the last obstacle was spawned
 
+
   Obstacle() : super(size: Vector2(100, 100), anchor: Anchor.bottomRight);
 
   @override
@@ -21,8 +22,10 @@ class Obstacle extends SpriteComponent
     // Load the sprite image for the obstacle
     sprite = await gameRef.loadSprite(Assets.treeImage);
 
-    // Set the initial position off-screen to the right
-    _resetPosition();
+    // Set initial position off-screen to the right, so it moves into view
+    position = Vector2(
+        gameRef.size.x + size.x + Random().nextDouble() * gameRef.size.x,
+        gameRef.groundY);
 
     // Add a hitbox that matches the obstacle's image size
     add(RectangleHitbox.relative(Vector2(0.6, 0.6), parentSize: size));
@@ -51,17 +54,9 @@ class Obstacle extends SpriteComponent
 
     // If the obstacle moves off-screen and cooldown is satisfied, spawn a new obstacle
     if (position.x < -size.x && timeSinceLastSpawn >= spawnCooldown) {
-      _resetPosition();
       timeSinceLastSpawn = 0; // Reset the spawn timer
     }
   }
 
-  void _resetPosition() {
-    // Randomize the initial spawn position off-screen
-    double randomGap = 500 + Random().nextDouble() * 1000; // Random gap between 500 and 1500
-    position = Vector2(
-      gameRef.size.x + size.x + randomGap,
-      gameRef.groundY,
-    );
-  }
+  // Method to generate a random height between 100 and 150
 }
