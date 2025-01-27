@@ -21,7 +21,7 @@ class TeddyBear extends SpriteAnimationComponent
   bool isRunning = false; // Track running state
 
   final double initialVelocityY = 1200; // Vertical speed for higher jump
-  final double gravity = 500; // Gravity to control the descent
+  final double gravity = 700; // Gravity to control the descent
   double time = 0; // Track jump time
   late double velocityY; // Vertical velocity
 
@@ -51,7 +51,7 @@ class TeddyBear extends SpriteAnimationComponent
     ]);
     walkAnimation = SpriteAnimation.spriteList(
       walkImages.map((image) => Sprite(image)).toList(),
-      stepTime: 0.2,
+      stepTime: 0.1,
     );
 
     // Load jump animation frames
