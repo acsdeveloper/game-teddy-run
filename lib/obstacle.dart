@@ -28,7 +28,7 @@ if(gameRef.score>2000)
 else
 {
    position = Vector2(
-        gameRef.size.x + size.x  * gameRef.size.x,
+        gameRef.size.x + size.x  ,
         gameRef.groundY);
 }
     // Add a hitbox that matches the obstacle's image size
