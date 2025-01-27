@@ -9,7 +9,7 @@ import 'package:teddyrun/super_dash_game.dart';
 class Obstacle extends SpriteComponent
     with HasGameRef<SuperDashGame>, CollisionCallbacks {
   double baseSpeed = 400; // Base speed of the obstacle
-  // Path to your obstacle image
+  double speedMultiplier = 1.0; // Multiplier for increasing speed
 
   Obstacle() : super(size: Vector2(100, 100), anchor: Anchor.bottomRight);
 
@@ -33,9 +33,13 @@ class Obstacle extends SpriteComponent
   void update(double dt) {
     super.update(dt);
 
-    // Increase speed based on score
-    double speed = baseSpeed + (gameRef.score / 10).clamp(0, 80000);
-// Limit speed increase
+    // Increase speed multiplier every 1500 points
+    if (gameRef.score % 1500 == 0 && gameRef.score != 0) {
+      speedMultiplier = 1.0 + (gameRef.score ~/ 1500) * 0.1; // Increase by 10% for every 1500 points
+    }
+
+    // Calculate the current speed
+    double speed = baseSpeed * speedMultiplier;
 
     // Update obstacle position with the new speed
     position.x -= speed * dt;
@@ -45,6 +49,4 @@ class Obstacle extends SpriteComponent
       removeFromParent();
     }
   }
-
-  // Method to generate a random height between 100 and 150
 }
