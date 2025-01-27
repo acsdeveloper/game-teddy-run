@@ -8,7 +8,7 @@ import 'package:teddyrun/super_dash_game.dart';
 
 class Obstacle extends SpriteComponent
     with HasGameRef<SuperDashGame>, CollisionCallbacks {
-  double baseSpeed = 400; // Base speed of the obstacle
+  double baseSpeed = 200; // Base speed of the obstacle
   double speedMultiplier = 1.0; // Multiplier for increasing speed
 
   Obstacle() : super(size: Vector2(100, 100), anchor: Anchor.bottomRight);
@@ -42,7 +42,7 @@ class Obstacle extends SpriteComponent
     double speed = baseSpeed * speedMultiplier;
 
     // Update obstacle position with the new speed
-    position.x -= speed * dt;
+    position.x -= speed *0.1* dt;
 
     // Remove obstacle when off-screen
     if (position.x < -size.x) {
