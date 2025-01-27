@@ -10,8 +10,9 @@ class Obstacle extends SpriteComponent
     with HasGameRef<SuperDashGame>, CollisionCallbacks {
   double baseSpeed = 400; // Base speed of the obstacle
   double speedMultiplier = 1.0; // Multiplier for increasing speed
-  static const double minGap = 500; // Minimum gap between obstacles (distance)
-  double lastSpawnPosition = 0; // To track the last spawn position of the obstacle
+  static const double baseSpawnCooldown = 2.5; // Base spawn cooldown in seconds
+  double spawnCooldown = baseSpawnCooldown; // Current cooldown time
+  double timeSinceLastSpawn = 0; // Time since the last obstacle was spawned
 
   Obstacle() : super(size: Vector2(100, 100), anchor: Anchor.bottomRight);
 
@@ -20,7 +21,7 @@ class Obstacle extends SpriteComponent
     // Load the sprite image for the obstacle
     sprite = await gameRef.loadSprite(Assets.treeImage);
 
-    // Set the initial position off-screen to the right, with a random gap
+    // Set the initial position off-screen to the right
     _resetPosition();
 
     // Add a hitbox that matches the obstacle's image size
@@ -36,6 +37,7 @@ class Obstacle extends SpriteComponent
     // Increase speed multiplier every 1500 points
     if (gameRef.score % 1500 == 0 && gameRef.score != 0) {
       speedMultiplier = 1.0 + (gameRef.score ~/ 1500) * 0.1; // Increase by 10% for every 1500 points
+      spawnCooldown = baseSpawnCooldown / (1.0 + (gameRef.score ~/ 1500) * 0.1); // Reduce cooldown
     }
 
     // Calculate the current speed
@@ -44,32 +46,22 @@ class Obstacle extends SpriteComponent
     // Update obstacle position with the new speed
     position.x -= speed * dt;
 
-    // Check if the obstacle has moved off-screen
-    if (position.x < -size.x) {
-      // Reset the position with a gap logic for scores < 10,000
+    // Track the time since the last obstacle spawn
+    timeSinceLastSpawn += dt;
+
+    // If the obstacle moves off-screen and cooldown is satisfied, spawn a new obstacle
+    if (position.x < -size.x && timeSinceLastSpawn >= spawnCooldown) {
       _resetPosition();
+      timeSinceLastSpawn = 0; // Reset the spawn timer
     }
   }
 
   void _resetPosition() {
-    double randomGap = _calculateGap(); // Calculate the gap dynamically
-
-    // Set the new position off-screen to the right, considering the random gap
+    // Randomize the initial spawn position off-screen
+    double randomGap = 500 + Random().nextDouble() * 1000; // Random gap between 500 and 1500
     position = Vector2(
       gameRef.size.x + size.x + randomGap,
       gameRef.groundY,
     );
-
-    lastSpawnPosition = position.x; // Update the last spawn position
-  }
-
-  double _calculateGap() {
-    // Increase gap if the score is less than 10,000
-    if (gameRef.score < 10000) {
-      return minGap + Random().nextDouble() * 1000; // Add a random gap between 500 and 1500
-    } else {
-      // For higher scores, keep the gap smaller
-      return minGap + Random().nextDouble() * 500; // Add a random gap between 500 and 1000
-    }
   }
 }
