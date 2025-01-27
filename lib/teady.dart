@@ -20,8 +20,9 @@ class TeddyBear extends SpriteAnimationComponent
   bool isColliding = false;
   bool isRunning = false; // Track running state
 
-  final double initialVelocityY = 900; // Vertical speed for higher jump
-  final double gravity = 400; // Gravity to control the descent
+final double gravity = 300; // Reduced gravity for slower descent
+final double initialVelocityY = 700; // Adjusted vertical speed to maintain jump height
+// Gravity to control the descent
   double time = 0; // Track jump time
   late double velocityY; // Vertical velocity
 

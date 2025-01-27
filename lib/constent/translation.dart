@@ -27,8 +27,8 @@ class LocaleStrings {
       "tryAgain": "Try Again"
     },
     "fr": {
-      "score": "Score : ",
-      "bestScore": "Meilleur score : ",
+      "score": "Score  ",
+      "bestScore": "Meilleur score  ",
       "gameOver": "Jeu terminé !",
       "musicOn": "Musique activée",
       "musicOff": "Musique désactivée",
