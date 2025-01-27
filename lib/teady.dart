@@ -120,7 +120,7 @@ void jump() {
 
     // Set initial vertical velocity dynamically based on obstacle speed
     double obstacleSpeed = gameRef.baseObstacleSpeed * gameRef.speedMultiplier;
-    velocityY = obstacleSpeed * 1.2; // Adjust multiplier as needed for jump height
+    velocityY = obstacleSpeed * 6; // Adjust multiplier as needed for jump height
   }
 }
 
