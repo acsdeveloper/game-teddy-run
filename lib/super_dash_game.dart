@@ -50,7 +50,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     final background = MovingBackground(
       imagePath: "screen/background.png",
       invertimagePath: "screen/invertedbackground.png",
-      speed: 400,
+      speed: 200,
     )..size = Vector2(size.x * 5, size.y);
 
     final clouds = MovingBackground(
@@ -92,7 +92,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       textRenderer: scoreStyle,
     );
 
-    obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
+    obstacleTimer = Timer(3, onTick: spawnObstacle, repeat: true);
 
     final backButton = SpriteButtonComponent(
       button: await Sprite.load("screen/back.png"),
