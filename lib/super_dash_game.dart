@@ -120,8 +120,11 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
           } else {
             // If the game is over, directly go to the start screen
             Navigator.pushAndRemoveUntil(
-              buildContext!,
-              MaterialPageRoute(builder: (context) => StartScreen()),
+              buildContext!, // Pass the buildContext of the FlameGame
+              MaterialPageRoute(
+                  builder: (context) => StartScreen(
+                        optionalContext: optionalcontext,
+                      )),
               (route) => false,
             );
           }
@@ -254,28 +257,32 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ButtonWidget(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                              resumeEngine();
-                            },
-                            text:  // Use your localization here
-                             LocaleStrings.getString(
-                                'no', Localizations.localeOf(context)),
-                          ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                                resumeEngine();
+                              },
+                              text:
+                              LocaleStrings.getString(
+                              'no', Localizations.localeOf(context)),
+                              ),
                           const SizedBox(width: 25.0),
                           ButtonWidget(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                              if (isBack) {
-                                Navigator.of(context)
-                                    .pop(); // Navigate back if isBack is true
-                              }
-                            },
-                            text:
-                             LocaleStrings.getString(
-                                'yes', Localizations.localeOf(context)),
-                            // Use your localization here
-                          ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.pushAndRemoveUntil(
+                                  buildContext!, // Pass the buildContext of the FlameGame
+                                  MaterialPageRoute(
+                                      builder: (context) => StartScreen(
+                                            optionalContext: context,
+                                          )),
+                                  (route) => false,
+                                );
+                              },
+                              text:
+                              LocaleStrings.getString(
+                                  'yes', Localizations.localeOf(context)),
+                              // Use your localization here
+                              ),
                         ],
                       ),
                     ],
