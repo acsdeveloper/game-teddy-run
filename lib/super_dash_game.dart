@@ -6,6 +6,8 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:teddyrun/constent/Colors.dart';
+import 'package:teddyrun/constent/button.dart';
 import 'package:teddyrun/constent/translation.dart';
 import 'package:teddyrun/movingbackground.dart';
 import 'package:teddyrun/teady.dart';
@@ -27,7 +29,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   double groundY = 0; // Will be set dynamically in onLoad
   bool ispaused = true;
   late SpriteButtonComponent playpauseButton;
-    double baseObstacleSpeed = 200; // Default speed of obstacles
+  double baseObstacleSpeed = 200; // Default speed of obstacles
 
   double speedMultiplier = 1.0; // Default multiplier
 
@@ -75,7 +77,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     highScoreText = TextComponent(
       anchor: Anchor.topLeft,
       text:
-          '${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}:${formatScore(highScore)}',
+      '${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}:${formatScore(highScore)}',
       position: Vector2(size.x - 200, 15),
       textRenderer: highScoreStyle,
     );
@@ -91,33 +93,39 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     );
     scoreText = TextComponent(
       text:
-          '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: 0',
+      '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: 0',
       position: Vector2(size.x - 200, 35),
       textRenderer: scoreStyle,
     );
-    
+
     obstacleTimer = Timer(2, onTick: spawnObstacle, repeat: true);
 
     final backButton = SpriteButtonComponent(
-      button: await Sprite.load("screen/back.png"),
-      position: Vector2(15, 13),
-      size: Vector2(34, 34),
-      onPressed: () {
-        if (isMusicOn) {
-          FlameAudio.bgm.stop();
-        }
-        pauseEngine();
-
-        Navigator.pushAndRemoveUntil(
-          buildContext!, // Pass the buildContext of the FlameGame
-          MaterialPageRoute(
-              builder: (context) => StartScreen(
-                    optionalContext: optionalcontext,
-                  )),
-          (route) => false,
-        );
-      },
-    );
+        button: await Sprite.load("screen/back.png"),
+        position: Vector2(15, 13),
+        size: Vector2(34, 34),
+        onPressed: () {
+          if (isMusicOn) {
+            FlameAudio.bgm.stop();
+          }
+          pauseEngine();
+          if (!isGameOver) {
+            // Show confirmation dialog only if the game is NOT over
+            showConfirmationDialog(
+              buildContext!,
+              LocaleStrings.getString(
+              'exitmessage', Localizations.localeOf(optionalcontext)),
+              true, // Set isBack to true
+            );
+          } else {
+            // If the game is over, directly go to the start screen
+            Navigator.pushAndRemoveUntil(
+              buildContext!,
+              MaterialPageRoute(builder: (context) => StartScreen()),
+              (route) => false,
+            );
+          }
+        });
     // **Initialize Settings Button with Correct Initial Sprite**
     Sprite settingsButtonSprite;
     Sprite settingsButtonDownSprite;
@@ -200,6 +208,87 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     teddyBear.isRunning = false;
   }
 
+  void showConfirmationDialog(BuildContext context, String text, bool isBack) {
+    showDialog(
+      context: context,
+      barrierColor:
+          Colors.transparent, // Make the barrier (background) transparent
+      builder: (BuildContext context) {
+        return Scaffold(
+          backgroundColor:
+              Colors.transparent, // Make the Scaffold background transparent
+          body: Stack(
+            children: [
+              // Transparent background covering the entire screen
+              Positioned.fill(
+                child: Container(
+                  color:
+                      overlayColor.withOpacity(0.1), // Adjust opacity as needed
+                ),
+              ),
+              // Centered dialog content
+              Center(
+                child: Material(
+                  color: Colors
+                      .transparent, // Make the Material widget transparent
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.60,
+                        ),
+                        child: Text(
+                          text,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                            color: Colors.black, // Use your textColor here
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ButtonWidget(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                              resumeEngine();
+                            },
+                            text:  // Use your localization here
+                             LocaleStrings.getString(
+                                'no', Localizations.localeOf(context)),
+                          ),
+                          const SizedBox(width: 25.0),
+                          ButtonWidget(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                              if (isBack) {
+                                Navigator.of(context)
+                                    .pop(); // Navigate back if isBack is true
+                              }
+                            },
+                            text:
+                             LocaleStrings.getString(
+                                'yes', Localizations.localeOf(context)),
+                            // Use your localization here
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void update(double dt) async {
     super.update(dt);
@@ -210,16 +299,16 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
 
       // Update score over time
       score += (dt * 90).toInt();
-      scoreText.text =
-          '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
+      scoreText.text = '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
       if (score > highScore) {
         highScore = score;
         highScoreText.text =
-            "${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}";
+        "${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}";
         await _saveHighScore(score);
       }
-       // Dynamically adjust speedMultiplier based on score
-    speedMultiplier = 1.0 + (score ~/ 2000) * 0.1; // Increase speed by 10% for every 2000 points
+      // Dynamically adjust speedMultiplier based on score
+      speedMultiplier = 1.0 +
+          (score ~/ 2000) * 0.1; // Increase speed by 10% for every 2000 points
     }
   }
 
@@ -250,13 +339,13 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     if (score > highScore) {
       highScore = score;
       await _saveHighScore(highScore);
-      highScoreText.text =
-          ' ${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))} : ${formatScore(highScore)}';
+      highScoreText.text = 
+      ' ${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))} : ${formatScore(highScore)}';
     }
 
     final gameOverText = TextComponent(
       text:
-          ' ${LocaleStrings.getString('gameOver', Localizations.localeOf(optionalcontext!))}',
+      ' ${LocaleStrings.getString('gameOver', Localizations.localeOf(optionalcontext!))}',
       position: Vector2(size.x / 2, size.y / 2),
       anchor: Anchor.center,
       textRenderer: TextPaint(
@@ -291,8 +380,8 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     isGameOver = false;
 
     score = 0;
-    scoreText.text =
-        '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
+    scoreText.text = 
+    '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
 
     obstacleTimer.start();
     resumeEngine();

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teddyrun/constent/Colors.dart';
 import 'package:teddyrun/constent/button.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:teddyrun/constent/translation.dart';
 
 class AppConstants {
@@ -14,7 +13,7 @@ class AppConstants {
     return GestureDetector(
       onTap: onTap,
       child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 150.0),
+        constraints: const BoxConstraints(minWidth: 150.0),
         child: Container(
           // width: width ,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -47,7 +46,7 @@ class AppConstants {
                 icon,
                 color: Colors.white,
               ),
-              const SizedBox(width: 25.0), // Space between icon and text
+              const SizedBox(width: 20.0), // Space between icon and text
               Text(
                 text,
                 style: const TextStyle(
@@ -157,8 +156,9 @@ class AppConstants {
                                   yesButtonAction();
                                 }
                               },
-                              text: LocaleStrings.getString(
-                                  'yes', Localizations.localeOf(context)),
+                              text: 
+                               LocaleStrings.getString(
+                              'yes', Localizations.localeOf(context)),
                             ),
                             const SizedBox(width: 25.0),
                             ButtonWidget(
@@ -167,7 +167,8 @@ class AppConstants {
                                   noButtonAction();
                                 }
                               },
-                              text: LocaleStrings.getString(
+                              text: 
+                               LocaleStrings.getString(
                                   'no', Localizations.localeOf(context)),
                             ),
                           ],

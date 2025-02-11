@@ -49,7 +49,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
         children: [
           Text(
             LocaleStrings.getString(
-                'gameOver', Localizations.localeOf(context)),
+            'gameOver', Localizations.localeOf(context)),
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w500,
@@ -59,8 +59,9 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
           const SizedBox(height: 20),
           AppConstants.gradientContainer(
             icon: Icons.refresh,
-            text: LocaleStrings.getString(
-                'tryAgain', Localizations.localeOf(context)),
+            text: 
+             LocaleStrings.getString(
+            'tryAgain', Localizations.localeOf(context)),
             onTap: () {
               // _playBackgroundMusic(); // Play music based on the preference
               widget.game.ispaused = true;
