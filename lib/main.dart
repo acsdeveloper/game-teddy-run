@@ -223,7 +223,6 @@ class _StartScreenState extends State<StartScreen> {
                         overlayEntry?.remove();
                         if (isBack) {
                           Navigator.of(context).pop();
-                          Navigator.of(context).pop();
                         }
                       },
                       text: LocaleStrings.getString(
