@@ -111,7 +111,7 @@ class _StartScreenState extends State<StartScreen> {
                   ),
                   onPressed: () {
                     showExitConfirmationOverlay(
-                      context,
+                      widget.optionalContext,
                       LocaleStrings.getString(
                           'exitmessage', Localizations.localeOf(context)),
                       // "Do you really want to exit the game?",
@@ -137,9 +137,8 @@ class _StartScreenState extends State<StartScreen> {
                 ),
                 const SizedBox(height: 50),
                 AppConstants.gradientContainer(
-                  text:
-                  LocaleStrings.getString(
-                  'start', Localizations.localeOf(context)),
+                  text: LocaleStrings.getString(
+                      'start', Localizations.localeOf(context)),
                   icon: Icons.play_arrow,
                   onTap: () {
                     Navigator.push(
@@ -215,9 +214,8 @@ class _StartScreenState extends State<StartScreen> {
                       onPressed: () {
                         overlayEntry?.remove();
                       },
-                      text:
-                       LocaleStrings.getString(
-                      'no', Localizations.localeOf(context)),
+                      text: LocaleStrings.getString(
+                          'no', Localizations.localeOf(context)),
                     ),
                     const SizedBox(width: 25.0),
                     ButtonWidget(
@@ -227,9 +225,8 @@ class _StartScreenState extends State<StartScreen> {
                           Navigator.of(context).pop();
                         }
                       },
-                      text:
-                       LocaleStrings.getString(
-                       'yes', Localizations.localeOf(context)),
+                      text: LocaleStrings.getString(
+                          'yes', Localizations.localeOf(context)),
                     ),
                   ],
                 ),
@@ -258,7 +255,7 @@ class GameScreen extends StatelessWidget {
         this.showExitConfirmationOverlay(
           context,
           LocaleStrings.getString(
-          'exitmessage', Localizations.localeOf(context)),
+              'exitmessage', Localizations.localeOf(context)),
           // "Do you really want to exit the game?",
           isBack: true,
         );
@@ -339,13 +336,12 @@ class GameScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ButtonWidget(
-                        onPressed: () {
-                          overlayEntry?.remove();
-                        },
-                        text:
-                         LocaleStrings.getString(
-                        'no', Localizations.localeOf(context)),
-                        ),
+                      onPressed: () {
+                        overlayEntry?.remove();
+                      },
+                      text: LocaleStrings.getString(
+                          'no', Localizations.localeOf(context)),
+                    ),
                     const SizedBox(width: 25.0),
                     ButtonWidget(
                       onPressed: () {
