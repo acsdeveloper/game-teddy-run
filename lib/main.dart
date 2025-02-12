@@ -95,7 +95,7 @@ class _StartScreenState extends State<StartScreen> {
         showExitConfirmationOverlay(
           context,
           LocaleStrings.getString(
-          'exitmessage', Localizations.localeOf(context)),
+              'exitmessage', Localizations.localeOf(context)),
           // "Do you really want to exit the game?",
           isBack: true,
         );
@@ -222,6 +222,7 @@ class _StartScreenState extends State<StartScreen> {
                       onPressed: () {
                         overlayEntry?.remove();
                         if (isBack) {
+                          Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         }
                       },
