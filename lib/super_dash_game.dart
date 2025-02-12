@@ -76,8 +76,8 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     );
     highScoreText = TextComponent(
       anchor: Anchor.topLeft,
-      text:
-          '${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}:${formatScore(highScore)}',
+      text: 
+      '${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}:${formatScore(highScore)}',
       position: Vector2(size.x - 200, 15),
       textRenderer: highScoreStyle,
     );
@@ -112,11 +112,12 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
           if (!isGameOver) {
             // Show confirmation dialog only if the game is NOT over
             showConfirmationDialog(
-              optionalcontext,
-              LocaleStrings.getString(
-                  'exitmessage', Localizations.localeOf(optionalcontext)),
-              true, // Set isBack to true
-            );
+                buildContext!,
+                LocaleStrings.getString(
+                'exitmessage', Localizations.localeOf(optionalcontext!)),
+                true,
+                optionalcontext // Set isBack to true
+                );
           } else {
             // If the game is over, directly go to the start screen
             Navigator.pushAndRemoveUntil(
@@ -211,10 +212,10 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
     teddyBear.isRunning = false;
   }
 
-  void showConfirmationDialog(
-      BuildContext optionalContext, String text, bool isBack) {
+  void showConfirmationDialog(BuildContext context, String text, bool isBack,
+      BuildContext optionalcontext) {
     showDialog(
-      context: optionalContext,
+      context: context,
       barrierColor:
           Colors.transparent, // Make the barrier (background) transparent
       builder: (BuildContext context) {
@@ -258,30 +259,31 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ButtonWidget(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                              resumeEngine();
-                            },
-                            text: LocaleStrings.getString(
-                                'no', Localizations.localeOf(context)),
-                          ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                                resumeEngine();
+                              },
+                              text:
+                               LocaleStrings.getString(
+                              'no', Localizations.localeOf(context)),
+                              ),
                           const SizedBox(width: 25.0),
                           ButtonWidget(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                              Navigator.pushAndRemoveUntil(
-                                buildContext!, // Pass the buildContext of the FlameGame
-                                MaterialPageRoute(
-                                    builder: (context) => StartScreen(
-                                          optionalContext: optionalContext,
-                                        )),
-                                (route) => false,
-                              );
-                            },
-                            text: LocaleStrings.getString(
-                                'yes', Localizations.localeOf(context)),
-                            // Use your localization here
-                          ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.pushAndRemoveUntil(
+                                  buildContext!, // Pass the buildContext of the FlameGame
+                                  MaterialPageRoute(
+                                      builder: (context) => StartScreen(
+                                            optionalContext: optionalcontext,
+                                          )),
+                                  (route) => false,
+                                );
+                              },
+                              text: LocaleStrings.getString(
+                              'yes', Localizations.localeOf(context)),
+                              // Use your localization here
+                              ),
                         ],
                       ),
                     ],
@@ -306,11 +308,11 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       // Update score over time
       score += (dt * 90).toInt();
       scoreText.text =
-          '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
+      '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
       if (score > highScore) {
         highScore = score;
         highScoreText.text =
-            "${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}";
+        "${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}";
         await _saveHighScore(score);
       }
       // Dynamically adjust speedMultiplier based on score
@@ -347,12 +349,12 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
       highScore = score;
       await _saveHighScore(highScore);
       highScoreText.text =
-          ' ${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))} : ${formatScore(highScore)}';
+      ' ${LocaleStrings.getString('bestScore', Localizations.localeOf(optionalcontext!))} : ${formatScore(highScore)}';
     }
 
     final gameOverText = TextComponent(
       text:
-          ' ${LocaleStrings.getString('gameOver', Localizations.localeOf(optionalcontext!))}',
+      ' ${LocaleStrings.getString('gameOver', Localizations.localeOf(optionalcontext!))}',
       position: Vector2(size.x / 2, size.y / 2),
       anchor: Anchor.center,
       textRenderer: TextPaint(
@@ -388,7 +390,7 @@ class SuperDashGame extends FlameGame with HasCollisionDetection, TapCallbacks {
 
     score = 0;
     scoreText.text =
-        '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
+    '${LocaleStrings.getString('score', Localizations.localeOf(optionalcontext!))}: ${formatScore(score)}';
 
     obstacleTimer.start();
     resumeEngine();
